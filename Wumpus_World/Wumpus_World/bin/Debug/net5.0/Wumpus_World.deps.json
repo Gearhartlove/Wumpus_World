@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "Wumpus_World/1.0.0": {
+        "runtime": {
+          "Wumpus_World.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Wumpus_World/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

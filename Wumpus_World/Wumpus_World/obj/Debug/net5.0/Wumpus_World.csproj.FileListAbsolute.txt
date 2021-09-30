@@ -1,0 +1,15 @@
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/bin/Debug/net5.0/Wumpus_World.deps.json
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/bin/Debug/net5.0/Wumpus_World.runtimeconfig.json
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/bin/Debug/net5.0/Wumpus_World.runtimeconfig.dev.json
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/bin/Debug/net5.0/Wumpus_World.dll
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/bin/Debug/net5.0/ref/Wumpus_World.dll
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/bin/Debug/net5.0/Wumpus_World.pdb
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/Debug/net5.0/Wumpus_World.csproj.AssemblyReference.cache
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/Debug/net5.0/Wumpus_World.GeneratedMSBuildEditorConfig.editorconfig
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/Debug/net5.0/Wumpus_World.AssemblyInfoInputs.cache
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/Debug/net5.0/Wumpus_World.AssemblyInfo.cs
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/Debug/net5.0/Wumpus_World.csproj.CoreCompileInputs.cache
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/Debug/net5.0/Wumpus_World.dll
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/Debug/net5.0/ref/Wumpus_World.dll
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/Debug/net5.0/Wumpus_World.pdb
+/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/Debug/net5.0/Wumpus_World.genruntimeconfig.cache
