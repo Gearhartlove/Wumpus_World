@@ -6,7 +6,7 @@ namespace Wumpus_World
     {
         static void Main(string[] args)
         {
-            Board board = new Board(20);
+            Board board = new Board(5);
         }
     }
 }
