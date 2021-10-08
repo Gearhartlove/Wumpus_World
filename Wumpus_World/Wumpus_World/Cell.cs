@@ -2,46 +2,40 @@
 {
     public class Cell
     {
-        private Obstacle obs;
+        private State state;
+        // initialized to -1, change when board is generated
+        private int x;
+        private int y;
+
+        public int getX => x;
+        public int getY => y;
         
-        public Cell() {
+        public Cell(int x, int y) {
             //instantiate Obs
-             obs = Obstacle.Initial;
+             state = State.Empty;
+             this.x = x;
+             this.y = y;
         }
 
-        public Obstacle Obs {
-            get => obs;
+        public State S {
+            get => state;
             set {
-                if (value == Obstacle.Gold || value == Obstacle.Spawn) {
-                    obs = value;
+                if (value == State.Gold || value == State.Spawn) {
+                    state = value;
                 }
                 // If the cell is empty, then assign the cell to the obstacle
-                if (obs == Obstacle.Initial) obs = value;
+                if (state == State.Empty) state = value;
             }
         }
-
-        public Obstacle GetObsticle() => Obs;
         
-        //cell modifiers
-        public bool isBreeze = false;
-        public bool isGlitter = false;
-        public bool isSmelly = false;
-        public bool isSafe = false; //Do we need this one? 
-       
-        //Get Modifier(s) Method //Should this return a tuple? 
-        // TODO: is the best way to do this? 
-        public bool GetBreeze => isBreeze;
-        public bool GetGlitter => isGlitter;
-        public bool GetSmelly => isSmelly;
-        public bool GetSafe => isSafe;
+        public State GetState() => S;
     }
 
-    public enum Obstacle {
-        Initial, //think about this design if it's a problem later
+    public enum State {
         Spawn,
         Gold,
         Wumpus,
-        Wall,
+        Obstacle,
         Pit,
         Empty
     }
