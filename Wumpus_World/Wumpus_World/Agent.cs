@@ -26,7 +26,7 @@ namespace Wumpus_World {
                     currentY--;
                     break;
                 case Direction.West:
-                    currentX++;
+                    currentX--;
                     break;
             }
 
