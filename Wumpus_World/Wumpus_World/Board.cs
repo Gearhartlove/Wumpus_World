@@ -99,7 +99,7 @@ namespace Wumpus_World {
         private void GenSpawn() {
            int n = rand.Next(EmptyCells.Count);
            EmptyCells[n].S = State.Spawn;
-           agent.SetPos(board[EmptyCells[n].getX, EmptyCells[n].getY]);
+           //agent.SetPos(board[EmptyCells[n].getX, EmptyCells[n].getY]);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Wumpus_World {
         /// <param name="c"></param>
         /// <returns></returns>
         private String WriteCell(Cell c) {
-            if (c == agent.GetPos()) return "\u2588";
+            if (c == agent.getCell(this)) return "\u2588";
             else {
                 switch (c.GetState()) {
                     case State.Empty:

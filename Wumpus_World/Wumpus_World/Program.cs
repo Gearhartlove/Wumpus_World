@@ -6,10 +6,8 @@ namespace Wumpus_World
     {
         static void Main(string[] args) {
             
-            FOAgent foAgent = new FOAgent();
+            FOAgent foAgent = new FOAgent(1, 1);
             Board board = new Board(3, foAgent);
-            Console.WriteLine(board);
-            foAgent.SetPos(board[1,1]);
             Console.WriteLine(board);
 
             Modifier mod = board.GetModifiers(board[0, 0]);
