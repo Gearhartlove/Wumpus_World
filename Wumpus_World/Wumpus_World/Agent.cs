@@ -5,6 +5,10 @@ namespace Wumpus_World {
         private int currentX, currentY;
         private int score = 0;
 
+        public int Score {
+            get => score;
+        }
+
         public Agent(int currentX, int currentY) {
             this.currentX = currentX;
             this.currentY = currentY;
@@ -70,5 +74,7 @@ namespace Wumpus_World {
 
             score++;
         }
+        
+        
     }
 }
