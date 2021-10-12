@@ -5,12 +5,11 @@ namespace Wumpus_World
     class Program
     {
         static void Main(string[] args) {
-            
-            FOAgent foAgent = new FOAgent(1, 1);
-            Board board = new Board(3, foAgent);
-            Console.WriteLine(board);
-
-            Modifier mod = board.GetModifiers(board[0, 0]);
+            FOAgent foAgent = new FOAgent();
+            ReflexAgent reflexAgent = new ReflexAgent();
+            Driver driver = new Driver(foAgent, reflexAgent); 
+            driver.RunTestWumpusWorld(foAgent); // test Wumpus World on 5x5 for specific agent (debugging)
+            //driver.RunWumpusWord();
         }
     }
 }

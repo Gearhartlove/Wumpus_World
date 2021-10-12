@@ -8,6 +8,8 @@ namespace Wumpus_World {
         public Cell this[int x, int y] => board[x, y];
         //used to place Gold and Spawn cells efficiently without overriding another State 
         private List<Cell> EmptyCells; 
+        // spawn cell
+        private Cell spawn;
         // default board size if no other size is given
         private int size = 0;
         public int GetSize => size;
@@ -18,15 +20,15 @@ namespace Wumpus_World {
         private const double pEmpty = 0.6;
         // Random generator
         private Random rand;
+        // Agent must be manually assigned using SetAgent() Method
         private Agent agent;
         
         /// <summary>
         /// Creates a Wumpus board. Uses the probabilities defined above to allocate board states and modifiers.
         /// </summary>
         /// <param name="size"></param>
-        public Board(int size, Agent agent) {
+        public Board(int size) {
             this.size = size;
-            this.agent = agent;
             EmptyCells = new List<Cell>();
             rand = new Random();
             board = new Cell[size, size];
@@ -99,8 +101,11 @@ namespace Wumpus_World {
         private void GenSpawn() {
            int n = rand.Next(EmptyCells.Count);
            EmptyCells[n].S = State.Spawn;
+           spawn = EmptyCells[n]; // set the spawn for the board
            //agent.SetPos(board[EmptyCells[n].getX, EmptyCells[n].getY]);
         }
+
+        
 
         /// <summary>
         /// Update the board's cells by checking for current state. If a wumpus, pit, or gold, update the up to
@@ -160,6 +165,22 @@ namespace Wumpus_World {
 
             } 
             return "Impossible State";
+        }
+
+        /// <summary>
+        /// Sets the agent who will navigate the board.
+        /// </summary>
+        /// <param name="a"></param>
+        public void SetAgent(Agent a) {
+            agent = a;
+            PlaceAgentOnSpawn();
+        }
+        
+        /// <summary>
+        /// Places the Agent on the spawn position to start exploring the board.
+        /// </summary>
+        private void PlaceAgentOnSpawn() {
+            agent.SpawnAgent(spawn); 
         }
     }
 }

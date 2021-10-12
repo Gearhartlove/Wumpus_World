@@ -1,3 +1,5 @@
+using System;
+
 namespace Wumpus_World {
     public class Agent {
 
@@ -5,15 +7,25 @@ namespace Wumpus_World {
         private int currentX, currentY;
         private int score = 0;
 
-        public Agent(int currentX, int currentY) {
-            this.currentX = currentX;
-            this.currentY = currentY;
-        }
-
+        public void SpawnAgent(Cell spawn) {
+            currentX = spawn.getX;
+            currentY = spawn.getY;
+        } 
+        
         public Cell getCell(Board board) {
             return board[currentX, currentY];
         }
-        
+
+        /// <summary>
+        /// Agent Navigating through Wumpus' World. This includes moving, recording statistics, as well as additional
+        /// logic, depending on the type of agent. Will be overriden by children.
+        /// </summary>
+        /// <param name="board"></param>
+        public void Navigate(Board board) {
+            board.SetAgent(this); // NEEDS TO BE INCLUDED FOR BOARD TO KNOW WHERE THE AGENT IS AND PRINT CORRECTLY.
+            // Put navigating logic below
+        }
+
         protected void walkForward() {
             switch (facing) {
                 case Direction.North:
@@ -71,7 +83,7 @@ namespace Wumpus_World {
             score++;
         }
         
-        /// Helper method or "macro" to move agent north (turns included)
+        /// Helper method or "macro" to move agent North (turns included)
         public void MoveNorth() {
             switch (facing) {
                 case Direction.North:
@@ -93,7 +105,7 @@ namespace Wumpus_World {
             }
         }
         
-        /// Helper method or "macro" to move agent south (turns included)
+        /// Helper method or "macro" to move agent South (turns included)
         public void MoveSouth() {
             switch (facing) {
                 case Direction.North:
@@ -115,7 +127,7 @@ namespace Wumpus_World {
             }
         }
         
-        /// Helper method / "macro" to move agent west (turns included)
+        /// Helper method or "macro" to move agent West (turns included)
         public void MoveWest() {
             switch (facing) {
                 case Direction.North:
@@ -137,7 +149,7 @@ namespace Wumpus_World {
             }
         }
         
-        // Helper method / "macro" to move agent north (turns included)
+        // Helper method or "macro" to move agent Eorth (turns included)
         public void MoveEast() {
             switch (facing) {
                 case Direction.North:
