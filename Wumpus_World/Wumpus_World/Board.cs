@@ -173,14 +173,8 @@ namespace Wumpus_World {
         /// <param name="a"></param>
         public void SetAgent(Agent a) {
             agent = a;
-            PlaceAgentOnSpawn();
-        }
-        
-        /// <summary>
-        /// Places the Agent on the spawn position to start exploring the board.
-        /// </summary>
-        private void PlaceAgentOnSpawn() {
-            agent.SpawnAgent(spawn); 
+            agent.SpawnAgent(spawn); // X and Y are private, which is why the board class calls the SpawnAgent method
+                                     // apart of the Agent class. Design can improve.
         }
     }
 }
