@@ -23,6 +23,7 @@ namespace Wumpus_World {
             Board board = new Board(5);
             agent.Navigate(board);
         }
+        
         /// <summary>
         /// Run the wumpus world program: generate 10 boards for each size 5x5 to 25x25, stepping by 5 each board.
         /// </summary>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Wumpus_World {
     public class Agent {
@@ -6,6 +7,7 @@ namespace Wumpus_World {
         private Direction facing = Direction.North;
         private int currentX, currentY;
         private int score = 0;
+        private List<Cell> cellsVisited;
 
         public void SpawnAgent(Cell spawn) {
             currentX = spawn.getX;
