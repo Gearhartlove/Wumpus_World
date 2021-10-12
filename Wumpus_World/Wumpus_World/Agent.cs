@@ -70,5 +70,93 @@ namespace Wumpus_World {
 
             score++;
         }
+        
+        /// Helper method or "macro" to move agent north (turns included)
+        public void MoveNorth() {
+            switch (facing) {
+                case Direction.North:
+                    walkForward();
+                    break;
+                case Direction.South:
+                    turnRight(); // right(south) => West
+                    turnRight(); // right(west) => North
+                    walkForward();
+                    break;
+                case Direction.East:
+                    turnLeft(); // left(East) => North
+                    walkForward();
+                    break;
+                case Direction.West:
+                    turnRight(); // right(West) => North
+                    walkForward();
+                    break;
+            }
+        }
+        
+        /// Helper method or "macro" to move agent south (turns included)
+        public void MoveSouth() {
+            switch (facing) {
+                case Direction.North:
+                    turnRight(); // right(north) => East
+                    turnRight(); // right(east) => South
+                    walkForward();
+                    break;
+                case Direction.South:
+                    walkForward();
+                    break;
+                case Direction.East:
+                    turnRight(); // right(east) => South
+                    walkForward();
+                    break;
+                case Direction.West:
+                    turnLeft();// left(West) => North
+                    walkForward();
+                    break;
+            }
+        }
+        
+        /// Helper method / "macro" to move agent west (turns included)
+        public void MoveWest() {
+            switch (facing) {
+                case Direction.North:
+                    turnLeft(); // left(North) => West
+                    walkForward();
+                    break;
+                case Direction.South:
+                    turnRight(); // right(South) => West
+                    walkForward();
+                    break;
+                case Direction.East:
+                    turnLeft(); // left(East) => North
+                    turnLeft(); // left(North) => East
+                    walkForward();
+                    break;
+                case Direction.West:
+                    walkForward();
+                    break;
+            }
+        }
+        
+        // Helper method / "macro" to move agent north (turns included)
+        public void MoveEast() {
+            switch (facing) {
+                case Direction.North:
+                    turnRight(); // right(North) => East
+                    walkForward();
+                    break;
+                case Direction.South:
+                    turnLeft(); // left(South) => East
+                    walkForward();
+                    break;
+                case Direction.East:
+                    walkForward();
+                    break;
+                case Direction.West:
+                    turnRight(); // right(West) => North
+                    turnRight(); // right(North) => East
+                    walkForward();
+                    break;
+            }
+        }
     }
 }
