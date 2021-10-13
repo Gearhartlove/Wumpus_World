@@ -5,7 +5,18 @@ namespace Wumpus_World {
     public class Board {
         private Cell[,] board;
         //indexer to access board cells easier
-        public Cell this[int x, int y] => board[x, y];
+        public Cell this[int x, int y] {
+            get {
+                //Won't let the agent travel outside of the board
+                if (x >= size || y >= size || x < 0 || y < 0) {
+                    Console.WriteLine("You cannot travel to cell [" + x + "," + y +"]. " +
+                                      "It does not exist. Nothing Happens");
+                    return agent.getCell(this); //agent does not move, nothing happens
+                }
+            
+                return board[x,y];
+            }
+        }
         //used to place Gold and Spawn cells efficiently without overriding another State 
         private List<Cell> EmptyCells; 
         // spawn cell
