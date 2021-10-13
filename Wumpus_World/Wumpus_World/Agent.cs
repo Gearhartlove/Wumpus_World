@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Wumpus_World {
     public class Agent {
@@ -7,11 +9,13 @@ namespace Wumpus_World {
         private Direction facing = Direction.North;
         private int currentX, currentY;
         private int score = 0;
-        private List<Cell> cellsVisited;
+        private Dictionary<Tuple<int,int>, bool> cellsVisited;
 
         public void SpawnAgent(Cell spawn) {
             currentX = spawn.getX;
             currentY = spawn.getY;
+            
+            UpdateVisited();
         } 
         
         public Cell getCell(Board board) {
@@ -44,6 +48,7 @@ namespace Wumpus_World {
                     break;
             }
 
+            UpdateVisited(); // update visited cells
             score++;
         }
             
@@ -171,6 +176,25 @@ namespace Wumpus_World {
                     walkForward();
                     break;
             }
+        }
+
+        /// <summary>
+        /// Updated cells visited list;
+        /// </summary>
+        private void UpdateVisited() {
+            if (!cellsVisited.ContainsKey(new Tuple<int, int>(currentX, currentY))) {
+                cellsVisited.Add(new Tuple<int, int>(currentX, currentY), true);
+            }
+        }
+
+        /// <summary>
+        /// If the cell has been visited return true, else return false
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns></returns>
+        public bool QueryVisited(Cell cell) {
+            if (!cellsVisited.ContainsKey(new Tuple<int, int>(cell.getX, cell.getY))) return false;
+            else return true;
         }
     }
 }
