@@ -9,6 +9,8 @@ namespace Wumpus_World {
         private Direction facing = Direction.North;
         private int currentX, currentY;
         private int previousX, previousY;
+        private int arrowX, arrowY;
+        private int arrowCount;
         private int score = 0;
         private Board board;
         private Dictionary<Tuple<int,int>, bool> cellsVisited = new Dictionary<Tuple<int, int>, bool>();
@@ -26,6 +28,7 @@ namespace Wumpus_World {
 
         public void SetBoard(Board board) {
             this.board = board;
+            arrowCount = board.GetWumpusCount;
         }
 
         /// <summary>
@@ -36,6 +39,75 @@ namespace Wumpus_World {
         public void Navigate(Board board) {
             board.SetAgent(this); // NEEDS TO BE INCLUDED FOR BOARD TO KNOW WHERE THE AGENT IS AND PRINT CORRECTLY.
             // Put navigating logic below
+        }
+
+        /// <summary>
+        /// Agent shoots in the direction they are facing. If it hits a Wumpus, award points (100);
+        /// </summary>
+        public void Shoot() {
+            if (arrowCount > 0) {
+                switch (facing) {
+                    case Direction.North:
+                        while (arrowY < board.GetSize) {
+                            arrowY++;
+                            if (ObstacleShot()) break;
+                            if (WumpusShot()) {
+                                // reward function
+                                break;
+                            }
+                        }
+                        break;
+                    
+                    case Direction.South:
+                        while (arrowY >= 0) {
+                            arrowY--;
+                            if (ObstacleShot()) break;
+                            if (WumpusShot()) {
+                                // reward function
+                                break;
+                            }
+                        }
+                        break;
+                    
+                    case Direction.East:
+                        while (arrowX >= 0) {
+                            arrowY--;
+                            if (ObstacleShot()) break;
+                            if (WumpusShot()) {
+                                // reward function 
+                                break;
+                            }
+                        }
+                        break;
+                    
+                    case Direction.West:
+                        while (arrowX <= board.GetSize) {
+                            arrowX++;
+                            if (ObstacleShot()) break;
+                            if (WumpusShot()) {
+                                // reward function
+                                break;
+                            }
+                        }
+                        break;
+                }
+
+                score++;
+                arrowCount--;
+                // reset arrow position to agent
+                arrowX = currentX;
+                arrowY = currentY;
+            }
+        }
+
+        private bool WumpusShot() {
+            if (board[arrowX, arrowY].GetState() == State.Wumpus) return true;
+            return false;
+        }
+
+        private bool ObstacleShot() {
+           if (board[arrowX, arrowY].GetState() == State.Obstacle) return true;
+           return false;
         }
 
         protected State walkForward() {

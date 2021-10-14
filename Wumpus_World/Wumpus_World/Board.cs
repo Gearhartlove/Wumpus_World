@@ -33,6 +33,9 @@ namespace Wumpus_World {
         private Random rand;
         // Agent must be manually assigned using SetAgent() Method
         private Agent agent;
+        // Number of Wumpuses on the board
+        private int wumpusCount = 0;
+        public int GetWumpusCount => wumpusCount;
         
         /// <summary>
         /// Creates a Wumpus board. Uses the probabilities defined above to allocate board states and modifiers.
@@ -79,6 +82,7 @@ namespace Wumpus_World {
                     double r = rand.NextDouble();
                     if (r < pWumpus) {
                         board[i, j].S = State.Wumpus;
+                        wumpusCount++; // add 1 to total number of wumpuses on the board
                     }
 
                     if (r > pWumpus && r < pWumpus + pObstacle) {
