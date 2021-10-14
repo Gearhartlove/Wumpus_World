@@ -73,7 +73,7 @@ namespace Wumpus_World
                     stats.IncrementStat('G');
                 }
 
-                life++;
+                life--;
             }
             // Print stats after death or victory
             stats.PrintStats();
@@ -104,28 +104,28 @@ namespace Wumpus_World
             if (IsMoveValid(cellX, cellY + 1)
                 && !willTakeRisks && !QueryVisited(board[cellX, cellY + 1]))
             {
-                //Console.WriteLine("M1N:");
+                Console.WriteLine("M1N:");
                 MoveNorth();
                 UpdateCurrentCell();
             }
             else if (IsMoveValid(cellX + 1, cellY)
                 && !willTakeRisks && !QueryVisited(board[cellX + 1, cellY]))
             {
-                //Console.WriteLine("M2E:");
+                Console.WriteLine("M2E:");
                 MoveEast();
                 UpdateCurrentCell();
             }
             else if (IsMoveValid(cellX, cellY - 1)
                 && !willTakeRisks && !QueryVisited(board[cellX, cellY - 1]))
             {
-                //Console.WriteLine("M3S:");
+                Console.WriteLine("M3S:");
                 MoveSouth();
                 UpdateCurrentCell();
             }
             else if (IsMoveValid(cellX - 1, cellY)
                 && !willTakeRisks && !QueryVisited(board[cellX - 1, cellY]))
             {
-                //Console.WriteLine("M4W:");
+                Console.WriteLine("M4W:");
                 MoveWest();
                 UpdateCurrentCell();
             }
@@ -136,6 +136,7 @@ namespace Wumpus_World
             {
                 int choice = random.Next(4);
 
+                UpdateCurrentCell();
                 switch (choice)
                 {
                     case 0:
@@ -186,7 +187,7 @@ namespace Wumpus_World
                         case 0:
                             if (IsMoveValid(cellX, cellY + 1))
                             {
-                                //Console.WriteLine("M5NS:");
+                                Console.WriteLine("M5NS:");
                                 MoveNorth();
                                 UpdateCurrentCell();
                                 DeathCheck();
@@ -202,7 +203,7 @@ namespace Wumpus_World
                         case 1:
                             if (IsMoveValid(cellX + 1, cellY))
                             {
-                                //Console.WriteLine("M6EW:");
+                                Console.WriteLine("M6EW:");
                                 MoveEast();
                                 UpdateCurrentCell();
                                 DeathCheck();
@@ -218,7 +219,7 @@ namespace Wumpus_World
                         case 2:
                             if (IsMoveValid(cellX, cellY - 1))
                             {
-                                //Console.WriteLine("M7SN:");
+                                Console.WriteLine("M7SN:");
                                 MoveSouth();
                                 UpdateCurrentCell();
                                 DeathCheck();
@@ -234,7 +235,7 @@ namespace Wumpus_World
                         case 3:
                             if (IsMoveValid(cellX - 1, cellY))
                             {
-                                //Console.WriteLine("M8WE:");
+                                Console.WriteLine("M8WE:");
                                 MoveWest();
                                 UpdateCurrentCell();
                                 DeathCheck();

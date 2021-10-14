@@ -29,7 +29,7 @@ namespace Wumpus_World
         }
 
         /// <summary>
-        /// Gets and returns the desired statistic
+        /// Gets and returns the desired statistic as an int
         /// </summary>
         /// <param name="_key"></param>
         /// <returns></returns>

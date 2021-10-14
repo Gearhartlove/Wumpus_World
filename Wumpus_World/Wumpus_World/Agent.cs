@@ -53,7 +53,7 @@ namespace Wumpus_World {
                     currentY--;
                     break;
                 case Direction.West:
-                    currentX++;
+                    currentX--;
                     break;
             }
             UpdateVisited(); // update visited cells
