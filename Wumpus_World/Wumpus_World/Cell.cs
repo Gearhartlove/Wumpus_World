@@ -2,16 +2,17 @@
 {
     public class Cell
     {
+        // Arguments
         private State state;
-        // initialized to -1, change when board is generated
         private int x;
         private int y;
 
+        // Get args
         public int getX => x;
         public int getY => y;
         
         public Cell(int x, int y) {
-            //instantiate Obs
+            //instantiate State 
              state = State.Empty;
              this.x = x;
              this.y = y;
@@ -31,6 +32,9 @@
         public State GetState() => S;
     }
 
+    /// <summary>
+    /// Possible states a cell could be.
+    /// </summary>
     public enum State {
         Spawn,
         Gold,

@@ -15,6 +15,10 @@ namespace Wumpus_World {
         private Board board;
         private Dictionary<Tuple<int,int>, bool> cellsVisited = new Dictionary<Tuple<int, int>, bool>();
 
+        /// <summary>
+        /// Spawn the agent on the board.
+        /// </summary>
+        /// <param name="spawn"></param>
         public void SpawnAgent(Cell spawn) {
             currentX = spawn.getX;
             currentY = spawn.getY;
@@ -22,10 +26,19 @@ namespace Wumpus_World {
             UpdateVisited();
         } 
         
+        /// <summary>
+        /// Get specific cell from the board.
+        /// </summary>
+        /// <param name="board"></param>
+        /// <returns></returns>
         public Cell getCell(Board board) {
             return board[currentX, currentY];
         }
 
+        /// <summary>
+        /// Assign the board to the agent.
+        /// </summary>
+        /// <param name="board"></param>
         public void SetBoard(Board board) {
             this.board = board;
             arrowCount = board.GetWumpusCount;
@@ -100,16 +113,28 @@ namespace Wumpus_World {
             }
         }
 
+        /// <summary>
+        /// Check if wumpus was shot.
+        /// </summary>
+        /// <returns></returns>
         private bool WumpusShot() {
             if (board[arrowX, arrowY].GetState() == State.Wumpus) return true;
             return false;
         }
 
+        /// <summary>
+        /// Check if obstacle was shot.
+        /// </summary>
+        /// <returns></returns>
         private bool ObstacleShot() {
            if (board[arrowX, arrowY].GetState() == State.Obstacle) return true;
            return false;
         }
 
+        /// <summary>
+        /// Walk the agent forward, depending on the direction the agent is facing.
+        /// </summary>
+        /// <returns></returns>
         protected State walkForward() {
             int prevX = currentX;
             int prevY = currentY;
@@ -137,6 +162,9 @@ namespace Wumpus_World {
             return board[currentX, currentY].GetState();
         }
             
+        /// <summary>
+        /// Turn the agent right.
+        /// </summary>
         protected void turnRight() {
             switch (facing) {
                 case Direction.North:
@@ -155,6 +183,9 @@ namespace Wumpus_World {
             score++;
         }
         
+        /// <summary>
+        /// Turn the agent left.
+        /// </summary>
         protected void turnLeft() {
             switch (facing) {
                 case Direction.North:
