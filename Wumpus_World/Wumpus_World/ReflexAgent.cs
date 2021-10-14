@@ -70,7 +70,7 @@ namespace Wumpus_World
                     Console.WriteLine("\nEntered gold\n");
                     Console.WriteLine("Cleared board!");
                     isSolved = true;
-                    stats.IncrementValue(1);
+                    stats.IncrementStat('G');
                 }
 
                 life++;
@@ -104,35 +104,36 @@ namespace Wumpus_World
             if (IsMoveValid(cellX, cellY + 1)
                 && !willTakeRisks && !QueryVisited(board[cellX, cellY + 1]))
             {
-                Console.WriteLine("M1N:");
+                //Console.WriteLine("M1N:");
                 MoveNorth();
                 UpdateCurrentCell();
             }
             else if (IsMoveValid(cellX + 1, cellY)
                 && !willTakeRisks && !QueryVisited(board[cellX + 1, cellY]))
             {
-                Console.WriteLine("M2E:");
+                //Console.WriteLine("M2E:");
                 MoveEast();
                 UpdateCurrentCell();
             }
             else if (IsMoveValid(cellX, cellY - 1)
                 && !willTakeRisks && !QueryVisited(board[cellX, cellY - 1]))
             {
-                Console.WriteLine("M3S:");
+                //Console.WriteLine("M3S:");
                 MoveSouth();
                 UpdateCurrentCell();
             }
             else if (IsMoveValid(cellX - 1, cellY)
                 && !willTakeRisks && !QueryVisited(board[cellX - 1, cellY]))
             {
-                Console.WriteLine("M4W:");
+                //Console.WriteLine("M4W:");
                 MoveWest();
                 UpdateCurrentCell();
             }
+
+            // Prevents agent from getting stuck when
+            // it's already explored nearby cells
             else if (!willTakeRisks)
             {
-                // Prevents agent from getting stuck when
-                // it's already explored nearby cells
                 int choice = random.Next(4);
 
                 switch (choice)
@@ -185,7 +186,7 @@ namespace Wumpus_World
                         case 0:
                             if (IsMoveValid(cellX, cellY + 1))
                             {
-                                Console.WriteLine("M5NS:");
+                                //Console.WriteLine("M5NS:");
                                 MoveNorth();
                                 UpdateCurrentCell();
                                 DeathCheck();
@@ -201,7 +202,7 @@ namespace Wumpus_World
                         case 1:
                             if (IsMoveValid(cellX + 1, cellY))
                             {
-                                Console.WriteLine("M6EW:");
+                                //Console.WriteLine("M6EW:");
                                 MoveEast();
                                 UpdateCurrentCell();
                                 DeathCheck();
@@ -217,7 +218,7 @@ namespace Wumpus_World
                         case 2:
                             if (IsMoveValid(cellX, cellY - 1))
                             {
-                                Console.WriteLine("M7SN:");
+                                //Console.WriteLine("M7SN:");
                                 MoveSouth();
                                 UpdateCurrentCell();
                                 DeathCheck();
@@ -233,7 +234,7 @@ namespace Wumpus_World
                         case 3:
                             if (IsMoveValid(cellX - 1, cellY))
                             {
-                                Console.WriteLine("M8WE:");
+                                //Console.WriteLine("M8WE:");
                                 MoveWest();
                                 UpdateCurrentCell();
                                 DeathCheck();
@@ -298,8 +299,8 @@ namespace Wumpus_World
             {
                 Console.WriteLine("\nEntered Wumpus\n");
                 isDead = true;
-                stats.IncrementValue(3);
-                stats.IncrementValue(4);
+                stats.IncrementStat('D');
+                stats.IncrementStat('W');
             }
 
             // If the current cell is a pit:
@@ -308,8 +309,8 @@ namespace Wumpus_World
             {
                 Console.WriteLine("\nEntered Pit\n");
                 isDead = true;
-                stats.IncrementValue(5);
-                stats.IncrementValue(4);
+                stats.IncrementStat('D');
+                stats.IncrementStat('P');
             }
         }
     }

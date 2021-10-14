@@ -1,112 +1,66 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Wumpus_World
 {
     public class Statistics
     {
         // Stats to be tracked
-        int timesActionsUsed = 0;
-        int timesGoldFound = 0;
-        int timesWumpusKilled = 0;
-        int timesWumpusKilledPlayer = 0;
-        int timesPlayerDied = 0;
-        int timesFellInPit = 0;
-        int cellsExplored = 0;
-
-        // Initialize stats
-        public Statistics()
+        Dictionary<char, int> agentStats = new Dictionary<char, int>()
         {
-            timesActionsUsed = 0;
-            timesGoldFound = 0;
-            timesWumpusKilled = 0;
-            timesWumpusKilledPlayer = 0;
-            timesPlayerDied = 0;
-            timesFellInPit = 0;
-            cellsExplored = 0;
+            {'A', 0},
+            {'G', 0},
+            {'K', 0},
+            {'W', 0},
+            {'D', 0},
+            {'P', 0},
+            {'E', 0}
+        };
+
+        /// <summary>
+        /// Increases the desired statistic by one
+        /// A for actions, G for gold, K for kills, W for Wumpus deaths,
+        /// D for total deaths, P for pit deaths, E for cells explored
+        /// </summary>
+        /// <param name="_key"></param>
+        public void IncrementStat(char _key)
+        {
+            agentStats[_key]++;
         }
 
-        // Method for resetting stat values
+        /// <summary>
+        /// Gets and returns the desired statistic
+        /// </summary>
+        /// <param name="_key"></param>
+        /// <returns></returns>
+        public int GetStat(char _key)
+        {
+            return agentStats[_key];
+        }
+
+        /// <summary>
+        /// Resets all values within the stat dictionary
+        /// </summary>
         public void Reset()
         {
-            timesActionsUsed = 0;
-            timesGoldFound = 0;
-            timesWumpusKilled = 0;
-            timesWumpusKilledPlayer = 0;
-            timesPlayerDied = 0;
-            timesFellInPit = 0;
-            cellsExplored = 0;
+            agentStats['A'] = 0;
+            agentStats['G'] = 0;
+            agentStats['K'] = 0;
+            agentStats['W'] = 0;
+            agentStats['D'] = 0;
+            agentStats['P'] = 0;
+            agentStats['E'] = 0;
         }
 
-        ///
-        ///
-        /// DO A DICTIONARY FOR THIS
-        ///
-        ///
-
-        // Increments a particular stat,
-        // does nothing if no stat is selected
-        public void IncrementValue(int _value)
-        {
-            switch (_value)
-            {
-                case 0:
-                    timesActionsUsed++;
-                    break;
-                case 1:
-                    timesGoldFound++;
-                    break;
-                case 2:
-                    timesWumpusKilled++;
-                    break;
-                case 3:
-                    timesWumpusKilledPlayer++;
-                    break;
-                case 4:
-                    timesPlayerDied++;
-                    break;
-                case 5:
-                    timesFellInPit++;
-                    break;
-                case 6:
-                    cellsExplored++;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        // Gets and returns the value of a particular stat,
-        // returns -1 if no stat is selected
-        public int GetValue(int _value)
-        {
-            switch (_value)
-            {
-                case 0:
-                    return timesActionsUsed;
-                case 1:
-                    return timesGoldFound;
-                case 2:
-                    return timesWumpusKilled;
-                case 3:
-                    return timesWumpusKilledPlayer;
-                case 4:
-                    return timesPlayerDied;
-                case 5:
-                    return timesFellInPit;
-                case 6:
-                    return cellsExplored;
-                default:
-                    return -1;
-            }
-        }
-
-        // Prints stats
+        /// <summary>
+        /// Prints all statistics to the console
+        /// </summary>
         public void PrintStats()
         {
-            Console.WriteLine("Actions taken: " + timesActionsUsed + "\nGolds found: "
-                + timesGoldFound + "\nWumpus' killed: " + timesWumpusKilled + "\nDeaths to Wumpus: "
-                + timesWumpusKilledPlayer + "\nTotal deaths: " + timesPlayerDied + "\nDeaths to pit: "
-                + timesFellInPit + "\nCells explored: " + cellsExplored);
+            Console.WriteLine("Actions taken: " + agentStats['A'] + "\nGolds found: "
+                + agentStats['G'] + "\nWumpus' killed: " + agentStats['K'] + "\nDeaths to Wumpus: "
+                + agentStats['W'] + "\nTotal deaths: " + agentStats['D'] + "\nDeaths to pit: "
+                + agentStats['P'] + "\nCells explored: " + agentStats['E']);
         }
     }
 }
