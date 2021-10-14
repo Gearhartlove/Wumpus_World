@@ -32,6 +32,8 @@ namespace Wumpus_World {
                 int size = boardSize * 5; 
                 for (int boardNum = 1; boardNum <= 10; boardNum++) {
                     Board board = new Board(size);
+                    foa.SetBoard(board);
+                    ra.SetBoard(board);
                     foa.Navigate(board);
                     ra.Navigate(board);
                 }

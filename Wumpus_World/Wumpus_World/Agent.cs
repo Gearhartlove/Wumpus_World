@@ -8,8 +8,10 @@ namespace Wumpus_World {
 
         private Direction facing = Direction.North;
         private int currentX, currentY;
+        private int previousX, previousY;
         private int score = 0;
-        private Dictionary<Tuple<int,int>, bool> cellsVisited;
+        private Board board;
+        private Dictionary<Tuple<int,int>, bool> cellsVisited = new Dictionary<Tuple<int, int>, bool>();
 
         public void SpawnAgent(Cell spawn) {
             currentX = spawn.getX;
@@ -22,6 +24,10 @@ namespace Wumpus_World {
             return board[currentX, currentY];
         }
 
+        public void SetBoard(Board board) {
+            this.board = board;
+        }
+
         /// <summary>
         /// Agent Navigating through Wumpus' World. This includes moving, recording statistics, as well as additional
         /// logic, depending on the type of agent. Will be overriden by children.
@@ -32,7 +38,10 @@ namespace Wumpus_World {
             // Put navigating logic below
         }
 
-        protected void walkForward() {
+        protected State walkForward() {
+            int prevX = currentX;
+            int prevY = currentY;
+            
             switch (facing) {
                 case Direction.North:
                     currentY++;
@@ -47,9 +56,13 @@ namespace Wumpus_World {
                     currentX++;
                     break;
             }
-
             UpdateVisited(); // update visited cells
             score++;
+            // checks if wall, does not let the agent move to wall cell
+            if (ObstacleCheck(board[currentX, currentY].GetState(), prevX, prevY)) {
+                return State.Obstacle;
+            }
+            return board[currentX, currentY].GetState();
         }
             
         protected void turnRight() {
@@ -67,7 +80,6 @@ namespace Wumpus_World {
                     facing = Direction.North;
                     break;
             }
-
             score++;
         }
         
@@ -91,93 +103,108 @@ namespace Wumpus_World {
         }
         
         /// Helper method or "macro" to move agent North (turns included)
-        public void MoveNorth() {
+        public State MoveNorth() {
             switch (facing) {
                 case Direction.North:
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.South:
                     turnRight(); // right(south) => West
                     turnRight(); // right(west) => North
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.East:
                     turnLeft(); // left(East) => North
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.West:
                     turnRight(); // right(West) => North
-                    walkForward();
-                    break;
+                    return walkForward();
             }
+            return State.Empty;
         }
         
         /// Helper method or "macro" to move agent South (turns included)
-        public void MoveSouth() {
+        public State MoveSouth() {
             switch (facing) {
                 case Direction.North:
                     turnRight(); // right(north) => East
                     turnRight(); // right(east) => South
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.South:
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.East:
                     turnRight(); // right(east) => South
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.West:
                     turnLeft();// left(West) => North
-                    walkForward();
-                    break;
+                    return walkForward();
             }
+            return State.Empty;
         }
         
         /// Helper method or "macro" to move agent West (turns included)
-        public void MoveWest() {
+        public State MoveWest() {
             switch (facing) {
                 case Direction.North:
                     turnLeft(); // left(North) => West
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.South:
                     turnRight(); // right(South) => West
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.East:
                     turnLeft(); // left(East) => North
                     turnLeft(); // left(North) => East
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.West:
-                    walkForward();
-                    break;
+                    return walkForward();
             }
+            return State.Empty; // will never happen
         }
         
         // Helper method or "macro" to move agent Eorth (turns included)
-        public void MoveEast() {
+        public State MoveEast() {
             switch (facing) {
                 case Direction.North:
                     turnRight(); // right(North) => East
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.South:
                     turnLeft(); // left(South) => East
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.East:
-                    walkForward();
-                    break;
+                    return walkForward();
                 case Direction.West:
                     turnRight(); // right(West) => North
                     turnRight(); // right(North) => East
-                    walkForward();
-                    break;
+                    return walkForward();
             }
+            return State.Empty; // will never happen
         }
 
+        /// <summary>
+        /// If I walked into an obstacle, to the previous cell.
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="prevX"></param>
+        /// <param name="prevY"></param>
+        public bool ObstacleCheck(State state, int prevX, int prevY) {
+            if (state == State.Obstacle) {
+                currentX = prevX;
+                currentY = prevY;
+                return true; // yes their was a wall, bounce off
+            }
+            return false; // no wall in cell 
+        }
+        
+        /// <summary>
+        /// Check if the agent is alive. Return true if alive, return false if dead.
+        /// </summary>
+        /// <returns></returns>
+        public bool AliveCheck() {
+            switch (board[currentX, currentY].GetState()) {
+                case State.Wumpus:
+                case State.Pit:
+                    return false;
+            }
+            return true;
+        }
         /// <summary>
         /// Updated cells visited list;
         /// </summary>
