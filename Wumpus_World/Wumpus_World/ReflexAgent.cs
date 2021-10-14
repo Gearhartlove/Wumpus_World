@@ -9,33 +9,49 @@ namespace Wumpus_World
         // Random class for use when randomness is required
         Random random = new Random();
 
+
+        // Truth values required for solving
+        bool isSolved = false;
+        bool isDead = false;
+
+        Board board;
+        Cell currentCell;
+
+        // X and Y values of the current cell
+        int cellX;
+        int cellY;
+
         // Method called to start board navigation
         public override void Navigate(Board _board)
         {
             // Sets the current board's current agent as this agent
             _board.SetAgent(this);
+            board = _board;
 
-            // Truth values required for solving
-            bool isSolved = false;
-            bool isDead = false;
+            // Updates the urrentCell variable
+            UpdateCurrentCell();
 
-            // Variable to hold the value of the current cell
-            Cell currentCell = getCell(_board);
+            // Assigning X and Y values of the current cell
+            cellX = currentCell.getX;
+            cellY = currentCell.getY;
 
             // Print the initial state of the board
             Console.WriteLine(_board.ToString());
 
+            // Life of the agent: stops it from going on forever
+            int life = 30;
+
             // Continue this while loop while the gold is not found and agent is not dead
-            while (!isSolved && !isDead)
+            while (!isSolved && !isDead && life > 0)
             {
-                // Runs ReflexMove method which moves the agent
+                // Runs a reflex move method which moves the agent
                 ReflexMove();
 
                 // Print the current state of the board
                 Console.WriteLine(_board.ToString());
 
                 // Gets the current cell the agent is in
-                currentCell = getCell(_board);
+                UpdateCurrentCell();
 
                 // Runs a check to see if agent is dead
                 DeathCheck();
@@ -49,201 +65,231 @@ namespace Wumpus_World
                     isSolved = true;
                     stats.IncrementValue(1);
                 }
+
+                life++;
             }
 
+            // Print stats after death or victory
+            stats.PrintStats();
+        }
 
-            void ReflexMove()
+        void ReflexMove()
+        {
+            // Variable to determine when to take risks that could lead to vicotry
+            bool willTakeRisks = false;
+
+            // Gets the current cell the agent is inside
+            UpdateCurrentCell();
+
+            Console.WriteLine("RA starting ReflexMove() in Cell X " + cellX + ", and Cell Y " + cellY);
+
+            // Class containing turth values of the current cell
+            // Informs agent of breeze, smell, glitter
+            Modifier mods = board.GetModifiers(currentCell);
+
+            // Change behavior if near gold
+            if (mods.isGlitter)
+                willTakeRisks = true;
+            else
+                willTakeRisks = false;
+
+            if (IsMoveValid(cellX, cellY + 1)
+                && !willTakeRisks && !QueryVisited(board[cellX, cellY + 1]))
             {
-                // Variable to determine when to take risks that could lead to vicotry
-                bool willTakeRisks = false;
+                Console.WriteLine("M1N:");
+                MoveNorth();
+                UpdateCurrentCell();
+            }
+            else if (IsMoveValid(cellX + 1, cellY)
+                && !willTakeRisks && !QueryVisited(board[cellX + 1, cellY]))
+            {
+                Console.WriteLine("M2E:");
+                MoveEast();
+                UpdateCurrentCell();
+            }
+            else if (IsMoveValid(cellX, cellY - 1)
+                && !willTakeRisks && !QueryVisited(board[cellX, cellY - 1]))
+            {
+                Console.WriteLine("M3S:");
+                MoveSouth();
+                UpdateCurrentCell();
+            }
+            else if (IsMoveValid(cellX - 1, cellY)
+                && !willTakeRisks && !QueryVisited(board[cellX - 1, cellY]))
+            {
+                Console.WriteLine("M4W:");
+                MoveWest();
+                UpdateCurrentCell();
+            }
+            else if (!willTakeRisks)
+            {
+                // Prevents agent from getting stuck when
+                // it's already explored nearby cells
+                int choice = random.Next(4);
 
-                // Gets the current cell the agent is inside
-                currentCell = getCell(_board);
-
-                // The size of the current board
-                int boardSize = _board.GetSize;
-                // X and Y values of the current cell
-                int cellX = currentCell.getX;
-                int cellY = currentCell.getY;
-
-                // Class containing turth values of the current cell
-                // Informs agent of breeze, smell, glitter
-                Modifier mods = _board.GetModifiers(currentCell);
-
-                Console.WriteLine("Cell X " + cellX + ", Cell Y " + cellY);
-                if (cellX > 4 || cellY > 4)
+                switch (choice)
                 {
-                    isSolved = true;
+                    case 0:
+                        if (IsMoveValid(cellX, cellY + 1))
+                        {
+                            MoveNorth();
+                            UpdateCurrentCell();
+                        }
+                        break;
+                    case 1:
+                        if (IsMoveValid(cellX + 1, cellY))
+                        {
+                            MoveEast();
+                            UpdateCurrentCell();
+                        }
+                        break;
+                    case 2:
+                        if (IsMoveValid(cellX, cellY - 1))
+                        {
+                            MoveSouth();
+                            UpdateCurrentCell();
+                        }
+                        break;
+                    case 3:
+                        if (IsMoveValid(cellX - 1, cellY))
+                        {
+                            MoveWest();
+                            UpdateCurrentCell();
+                        }
+                        break;
+                    default:
+                        break;
                 }
+            }
 
-                // Prevents agent from moving out of bounds
-                bool canMoveNorth = IsMoveValid(boardSize, cellX, cellY + 1);
-                bool canMoveEast = IsMoveValid(boardSize, cellX + 1, cellY);
-                bool canMoveSouth = IsMoveValid(boardSize, cellX, cellY - 1);
-                bool canMoveWest = IsMoveValid(boardSize, cellX - 1, cellY);
+            // Remember the cell the gold is adjacent to then
+            // go to each of those adjacent cells until gold is found
+            if (willTakeRisks)
+            {
+                bool inGoldCell = false;
+                int direction = 0;
 
-                // Change behavior if near gold
-                if (mods.isGlitter)
-                    willTakeRisks = true;
-                else
-                    willTakeRisks = false;
-
-                //DEBUG
-                Console.WriteLine("" + canMoveNorth + canMoveEast + canMoveSouth + canMoveWest);
-
-                if (canMoveNorth && !willTakeRisks && !QueryVisited(_board[cellX, cellY + 1]))
+                //TODO: only move if cell is unexplored to save actions
+                while (!inGoldCell && !isDead)
                 {
-                    Console.WriteLine("M1N:");
-                    MoveNorth();
-                }
-                else if (canMoveEast && !willTakeRisks && !QueryVisited(_board[cellX + 1, cellY]))
-                {
-                    Console.WriteLine("M2E:");
-                    MoveEast();
-                }
-                else if (canMoveSouth && !willTakeRisks && !QueryVisited(_board[cellX, cellY - 1]))
-                {
-                    Console.WriteLine("M3S:");
-                    MoveSouth();
-                }
-                else if (canMoveWest && !willTakeRisks && !QueryVisited(_board[cellX - 1, cellY]))
-                {
-                    Console.WriteLine("M4W:");
-                    MoveWest();
-                }
-                else if (!willTakeRisks)
-                {
-                    // Prevents agent from getting stuck when
-                    // it's already explored nearby cells
-                    int choice = random.Next(4);
-
-                    switch (choice)
+                    switch (direction)
                     {
                         case 0:
-                            if (canMoveNorth)
+                            if (IsMoveValid(cellX, cellY + 1))
+                            {
+                                Console.WriteLine("M5NS:");
                                 MoveNorth();
+                                UpdateCurrentCell();
+                                DeathCheck();
+                                if (currentCell.GetState() == State.Gold)
+                                    inGoldCell = true;
+                                else
+                                {
+                                    MoveSouth();
+                                    UpdateCurrentCell();
+                                }
+                            }
                             break;
                         case 1:
-                            if (canMoveEast)
+                            if (IsMoveValid(cellX + 1, cellY))
+                            {
+                                Console.WriteLine("M6EW:");
                                 MoveEast();
+                                UpdateCurrentCell();
+                                DeathCheck();
+                                if (currentCell.GetState() == State.Gold)
+                                    inGoldCell = true;
+                                else
+                                {
+                                    MoveWest();
+                                    UpdateCurrentCell();
+                                }
+                            }
                             break;
                         case 2:
-                            if (canMoveSouth)
+                            if (IsMoveValid(cellX, cellY - 1))
+                            {
+                                Console.WriteLine("M7SN:");
                                 MoveSouth();
+                                UpdateCurrentCell();
+                                DeathCheck();
+                                if (currentCell.GetState() == State.Gold)
+                                    inGoldCell = true;
+                                else
+                                {
+                                    MoveNorth();
+                                    UpdateCurrentCell();
+                                }
+                            }
                             break;
                         case 3:
-                            if (canMoveWest)
+                            if (IsMoveValid(cellX - 1, cellY))
+                            {
+                                Console.WriteLine("M8WE:");
                                 MoveWest();
+                                UpdateCurrentCell();
+                                DeathCheck();
+                                if (currentCell.GetState() == State.Gold)
+                                    inGoldCell = true;
+                                else
+                                {
+                                    MoveEast();
+                                    UpdateCurrentCell();
+                                }
+                            }
                             break;
                         default:
                             break;
                     }
-                }
-
-                // Remember the cell the gold is adjacent to then
-                // go to each of those adjacent cells until gold is found
-                if (willTakeRisks)
-                {
-                    bool inGoldCell = false;
-                    int direction = 0;
-
-                    while (!inGoldCell && !isDead)
-                    {
-                        switch (direction)
-                        {
-                            case 0:
-                                if (canMoveNorth)
-                                {
-                                    Console.WriteLine("M5NS:");
-                                    MoveNorth();
-                                    DeathCheck();
-                                    if (currentCell.GetState() == State.Gold)
-                                        inGoldCell = true;
-                                    else
-                                        MoveSouth();
-                                }
-                                break;
-                            case 1:
-                                if (canMoveEast)
-                                {
-                                    Console.WriteLine("M6EW:");
-                                    MoveEast();
-                                    DeathCheck();
-                                    if (currentCell.GetState() == State.Gold)
-                                        inGoldCell = true;
-                                    else
-                                        MoveWest();
-                                }
-                                break;
-                            case 2:
-                                if (canMoveSouth)
-                                {
-                                    Console.WriteLine("M7SN:");
-                                    MoveSouth();
-                                    DeathCheck();
-                                    if (currentCell.GetState() == State.Gold)
-                                        inGoldCell = true;
-                                    else
-                                        MoveNorth();
-                                }
-                                break;
-                            case 3:
-                                if (canMoveWest)
-                                {
-                                    Console.WriteLine("M8WE:");
-                                    MoveWest();
-                                    DeathCheck();
-                                    if (currentCell.GetState() == State.Gold)
-                                        inGoldCell = true;
-                                    else
-                                        MoveEast();
-                                }
-                                break;
-                            default:
-                                break;
-                        }
-                        direction++;
-                    }
+                    direction++;
                 }
             }
+            UpdateCurrentCell();
+            Console.WriteLine("RA ending ReflexMove() in Cell X " + cellX + ", and Cell Y " + cellY);
+        }
 
-            // Method to check if a particular move is valid
-            bool IsMoveValid(int _size, int _x, int _y)
+        // Method to update the current cell the agent is in
+        void UpdateCurrentCell()
+        {
+            currentCell = getCell(board);
+            cellX = currentCell.getX;
+            cellY = currentCell.getY;
+        }
+
+        // Method to check if a particular move is valid
+        bool IsMoveValid(int _x, int _y)
+        {
+            // Retruns true if the desired move is valid
+            if (_x > board.GetSize - 1 || _x < 0)
+                return false;
+            if (_y > board.GetSize - 1 || _y < 0)
+                return false;
+            else
+                return true;
+        }
+
+        // Method to check if the agent is in a dangerous cell and should be considered dead
+        void DeathCheck()
+        {
+            // If the current cell is a Wumpus:
+            // The agent dies
+            if (currentCell.GetState() == State.Wumpus)
             {
-                // Retruns true if the desired move is valid
-                if (_x > _size - 1 || _x < 0)
-                    return false;
-                if (_y > _size - 1 || _y < 0)
-                    return false;
-                else
-                    return true;
+                Console.WriteLine("\nEntered Wumpus\n");
+                isDead = true;
+                stats.IncrementValue(3);
+                stats.IncrementValue(4);
             }
 
-            // Method to check if the agent is in a dangerous cell and should be considered dead
-            void DeathCheck()
+            // If the current cell is a pit:
+            // The agent dies
+            if (currentCell.GetState() == State.Pit)
             {
-                // If the current cell is a Wumpus:
-                // The agent dies
-                if (currentCell.GetState() == State.Wumpus)
-                {
-                    Console.WriteLine("\nEntered Wumpus\n");
-                    isDead = true;
-                    stats.IncrementValue(3);
-                    stats.IncrementValue(4);
-                }
-
-                // If the current cell is a pit:
-                // The agent dies
-                if (currentCell.GetState() == State.Pit)
-                {
-                    Console.WriteLine("\nEntered Pit\n");
-                    isDead = true;
-                    stats.IncrementValue(5);
-                    stats.IncrementValue(4);
-                }
+                Console.WriteLine("\nEntered Pit\n");
+                isDead = true;
+                stats.IncrementValue(5);
+                stats.IncrementValue(4);
             }
-                // Print stats after death or victory
-                stats.PrintStats();
         }
     }
 }

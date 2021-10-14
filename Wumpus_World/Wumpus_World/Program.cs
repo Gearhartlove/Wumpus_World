@@ -12,6 +12,7 @@ namespace Wumpus_World
             //driver.RunWumpusWord();
 
             driver.RunWumpusWorld();
+            Console.WriteLine("DONE!");
         }
     }
 }
