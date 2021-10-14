@@ -9,23 +9,30 @@ namespace Wumpus_World
         // Random class for use when randomness is required
         Random random = new Random();
 
-
         // Truth values required for solving
         bool isSolved = false;
         bool isDead = false;
 
+        // Variable to reference the board
         Board board;
+
+        // Variable to hold the current cell the agent is in
         Cell currentCell;
 
         // X and Y values of the current cell
         int cellX;
         int cellY;
 
-        // Method called to start board navigation
+        /// <summary>
+        /// Starts board navigation with the ReflexAgent
+        /// </summary>
+        /// <param name="_board"></param>
         public override void Navigate(Board _board)
         {
             // Sets the current board's current agent as this agent
             _board.SetAgent(this);
+
+            // Sets the board variable to be the input _board
             board = _board;
 
             // Updates the urrentCell variable
@@ -68,22 +75,23 @@ namespace Wumpus_World
 
                 life++;
             }
-
             // Print stats after death or victory
             stats.PrintStats();
         }
 
+        /// <summary>
+        /// Moves the agent to an adjacent cell based on many turth values
+        /// </summary>
         void ReflexMove()
         {
             // Variable to determine when to take risks that could lead to vicotry
             bool willTakeRisks = false;
 
-            // Gets the current cell the agent is inside
             UpdateCurrentCell();
 
             Console.WriteLine("RA starting ReflexMove() in Cell X " + cellX + ", and Cell Y " + cellY);
 
-            // Class containing turth values of the current cell
+            // Contains turth values of the current cell
             // Informs agent of breeze, smell, glitter
             Modifier mods = board.GetModifiers(currentCell);
 
@@ -249,6 +257,10 @@ namespace Wumpus_World
         }
 
         // Method to update the current cell the agent is in
+        /// <summary>
+        /// Updates information of the cells X and Y values as well
+        /// as the current cell the agent is in
+        /// </summary>
         void UpdateCurrentCell()
         {
             currentCell = getCell(board);
@@ -256,7 +268,13 @@ namespace Wumpus_World
             cellY = currentCell.getY;
         }
 
-        // Method to check if a particular move is valid
+        /// <summary>
+        /// Checks if a particular move is valid or not based on the
+        /// desired cell and board size
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        /// <returns></returns>
         bool IsMoveValid(int _x, int _y)
         {
             // Retruns true if the desired move is valid
@@ -268,7 +286,10 @@ namespace Wumpus_World
                 return true;
         }
 
-        // Method to check if the agent is in a dangerous cell and should be considered dead
+        /// <summary>
+        /// Checks to see if the player is inside a dengerous cell
+        /// and if so the player is considered dead
+        /// </summary>
         void DeathCheck()
         {
             // If the current cell is a Wumpus:
