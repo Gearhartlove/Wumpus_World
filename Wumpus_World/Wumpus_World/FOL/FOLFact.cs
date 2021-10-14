@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Net.Mail;
+
 namespace Wumpus_World {
 	public class FOLFact {
 
@@ -6,7 +10,7 @@ namespace Wumpus_World {
 		private bool not = false;
 		
 		private FOLFact next;
-		private UnifierType unifierType;
+		private UnifierType unifierType = UnifierType.NONE;
 
 		public FOLFact(PredicateType type, int x, int y) {
 			this.x = x;
@@ -14,16 +18,63 @@ namespace Wumpus_World {
 			this.type = type;
 		}
 
-		public FOLFact and(FOLFact term) {
+		public FOLFact and(PredicateType type, int x, int y) {
+			FOLFact term = new FOLFact(type, x, y);
 			this.next = term;
 			this.unifierType = UnifierType.AND;
 			return term;
 		}
 		
-		public FOLFact or(FOLFact term) {
+		public FOLFact or(PredicateType type, int x, int y) {
+			FOLFact term = new FOLFact(type, x, y);
 			this.next = term;
 			this.unifierType = UnifierType.OR;
 			return term;
+		}
+
+		public FOLFact isNegative() {
+			this.not = true;
+			return this;
+		}
+
+		public bool hasNext() {
+			return next != null;
+		}
+
+		public FOLFact detatchNext() {
+			var n = next;
+			next = null;
+			unifierType = UnifierType.NONE;
+			return n;
+		}
+
+		public List<FOLFact> separate(FOLFact head = null, FOLFact current = null,  List<FOLFact> facts = null) {
+			facts = facts == null ? new List<FOLFact>() : facts;
+			head = head == null ? this : head;
+			current = current == null ? this : current;
+			if (current.hasNext()) {
+				var n = current.next;
+				if (current.unifierType == UnifierType.AND) {
+					current.detatchNext();
+					facts.Add(head);
+
+					return separate(facts: facts, head: n, current: n);
+				}
+				
+				return separate(facts: facts, head: head, current:n);
+			}
+
+			facts.Add(head);
+			return facts;
+		}
+
+		public override string ToString() {
+			var not = this.not ? "-" : "";
+			var str = not + type.ToString() + "(" + x + ", " + y + ")";
+			if (hasNext()) {
+				string uni = unifierType == UnifierType.AND ? " ∧ " : " v ";
+				return str + uni + next.ToString();
+			} else return str;
 		}
 
 		public bool Not {
@@ -56,6 +107,7 @@ namespace Wumpus_World {
 	
 	public enum UnifierType {
 		AND,
-		OR
+		OR,
+		NONE
 	}
 }
