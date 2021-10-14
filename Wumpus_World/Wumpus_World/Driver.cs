@@ -21,6 +21,7 @@ namespace Wumpus_World {
         /// </summary>
         public void RunTestWumpusWorld(Agent agent) {
             Board board = new Board(5);
+            agent.SetBoard(board);
             agent.Navigate(board);
         }
         
@@ -38,6 +39,13 @@ namespace Wumpus_World {
                     ra.Navigate(board);
                 }
             }
+        }
+
+        public void RunWumpusWorld()
+        {
+            Board board = new Board(5);
+            ra.SetBoard(board);
+            ra.Navigate(board);
         }
     }
 }

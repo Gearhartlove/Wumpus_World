@@ -33,7 +33,7 @@ namespace Wumpus_World {
         /// logic, depending on the type of agent. Will be overriden by children.
         /// </summary>
         /// <param name="board"></param>
-        public void Navigate(Board board) {
+        public virtual void Navigate(Board board) {
             board.SetAgent(this); // NEEDS TO BE INCLUDED FOR BOARD TO KNOW WHERE THE AGENT IS AND PRINT CORRECTLY.
             // Put navigating logic below
         }

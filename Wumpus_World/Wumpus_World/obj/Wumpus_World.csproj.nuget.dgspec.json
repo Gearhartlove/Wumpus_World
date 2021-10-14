@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj": {}
+    "/Users/Thesus/Desktop/github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj": {}
   },
   "projects": {
-    "/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj": {
+    "/Users/Thesus/Desktop/github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj",
+        "projectUniqueName": "/Users/Thesus/Desktop/github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj",
         "projectName": "Wumpus_World",
-        "projectPath": "/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj",
-        "packagesPath": "/Users/gearhart/.nuget/packages/",
-        "outputPath": "/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/",
+        "projectPath": "/Users/Thesus/Desktop/github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj",
+        "packagesPath": "/Users/Thesus/.nuget/packages/",
+        "outputPath": "/Users/Thesus/Desktop/github/Wumpus_World/Wumpus_World/Wumpus_World/obj/",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "/Users/gearhart/.nuget/NuGet/NuGet.Config"
+          "/Users/Thesus/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -52,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.400/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.402/RuntimeIdentifierGraph.json"
         }
       }
     }
