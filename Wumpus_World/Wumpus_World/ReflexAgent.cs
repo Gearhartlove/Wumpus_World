@@ -70,6 +70,12 @@ namespace Wumpus_World
                 // Informs agent of breeze, smell, glitter
                 Modifier mods = _board.GetModifiers(currentCell);
 
+                Console.WriteLine("Cell X " + cellX + ", Cell Y " + cellY);
+                if (cellX > 4 || cellY > 4)
+                {
+                    isSolved = true;
+                }
+
                 // Prevents agent from moving out of bounds
                 bool canMoveNorth = IsMoveValid(boardSize, cellX, cellY + 1);
                 bool canMoveEast = IsMoveValid(boardSize, cellX + 1, cellY);
