@@ -1,0 +1,20 @@
+Author Contributions to Wumpus_World Project
+
+Kristoff Finley contributed to: 
+Modifier.cs
+Driver.cs
+Agent.cs
+Board.cs
+Cell.cs
+
+Brooks Palin contributed to: 
+FOLAgent.cs
+FOLFact.cs
+FOLKnowledgeBase.cs
+FOLRule.cs
+Direction.cs
+Agent.cs
+
+Nathaniel Priestley contributed to:
+ReflexAgent.cs
+Statistics.cs
