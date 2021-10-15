@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Wumpus_World {
     public class Agent {
@@ -275,16 +277,6 @@ namespace Wumpus_World {
             }
             return true;
         }
-
-        /// <summary>
-        /// Checks if their is a gold in the agent's cell.
-        /// </summary>
-        /// <returns></returns>
-        public bool GoldCheck() {
-            if (board[currentX, currentY].GetState() == State.Gold) return true;
-            return false;
-        }
-        
         /// <summary>
         /// Updated cells visited list;
         /// </summary>
@@ -305,10 +297,3 @@ namespace Wumpus_World {
         }
     }
 }
-
-// 4,4
-// can I walk one in x direction? 
-//  -> have I been there before? if so, go go head 
-// can I walk in the y directin? 
-//  -> 
-// 1,1
