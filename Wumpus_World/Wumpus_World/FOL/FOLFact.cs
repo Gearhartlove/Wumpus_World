@@ -8,25 +8,27 @@ namespace Wumpus_World {
 		private int x, y;
 		private PredicateType type;
 		private bool not = false;
-		
+
+		private FOLFact head;
 		private FOLFact next;
 		private UnifierType unifierType = UnifierType.NONE;
 
-		public FOLFact(PredicateType type, int x, int y) {
+		public FOLFact(PredicateType type, int x, int y, FOLFact head = null) {
+			this.head = head != null ? head : this;
 			this.x = x;
 			this.y = y;
 			this.type = type;
 		}
 
 		public FOLFact and(PredicateType type, int x, int y) {
-			FOLFact term = new FOLFact(type, x, y);
+			FOLFact term = new FOLFact(type, x, y, head);
 			this.next = term;
 			this.unifierType = UnifierType.AND;
 			return term;
 		}
 		
 		public FOLFact or(PredicateType type, int x, int y) {
-			FOLFact term = new FOLFact(type, x, y);
+			FOLFact term = new FOLFact(type, x, y, head);
 			this.next = term;
 			this.unifierType = UnifierType.OR;
 			return term;
@@ -39,6 +41,10 @@ namespace Wumpus_World {
 
 		public bool hasNext() {
 			return next != null;
+		}
+
+		public FOLFact getHead() {
+			return head;
 		}
 
 		public FOLFact detatchNext() {
@@ -72,9 +78,14 @@ namespace Wumpus_World {
 			var not = this.not ? "-" : "";
 			var str = not + type.ToString() + "(" + x + ", " + y + ")";
 			if (hasNext()) {
-				string uni = unifierType == UnifierType.AND ? " ∧ " : " v ";
+				string uni = unifierType == UnifierType.AND ? " A " : " v ";
 				return str + uni + next.ToString();
 			} else return str;
+		}
+
+		public int length(int current = 1) {
+			if (hasNext()) return next.length(current: current + 1);
+			return current;
 		}
 
 		public bool Not {

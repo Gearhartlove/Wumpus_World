@@ -18,16 +18,16 @@
     /// </summary>
     public class PitQuantifier : FOLRule {
         public FOLFact eval(int x, int y) {
-            var fact = new FOLFact(PredicateType.SAFE, x, y).isNegative();
-                
-            fact.and(PredicateType.BREEZE, x, y)
+            var fact = new FOLFact(PredicateType.SAFE, x, y).isNegative()
+                .and(PredicateType.BREEZE, x, y)
                 .and(PredicateType.BREEZE, x + 1, y)
                 .and(PredicateType.BREEZE, x - 1, y)
                 .and(PredicateType.BREEZE, x, y + 1)
                 .and(PredicateType.BREEZE, x, y - 1)
                 .and(PredicateType.WUMPUS, x, y).isNegative()
                 .and(PredicateType.GOLD, x, y).isNegative()
-                .and(PredicateType.OBSTACLE, x, y).isNegative();
+                .and(PredicateType.OBSTACLE, x, y).isNegative()
+                .getHead();
 
             return fact;
         }
@@ -51,7 +51,8 @@
                 .and(PredicateType.SMELL, x, y - 1)
                 .and(PredicateType.PIT, x, y).isNegative()
                 .and(PredicateType.GOLD, x, y).isNegative()
-                .and(PredicateType.OBSTACLE, x, y).isNegative();
+                .and(PredicateType.OBSTACLE, x, y).isNegative()
+                .getHead();
         }
 
         public bool precondition(FOLFact fact) {
@@ -68,7 +69,8 @@
             return new FOLFact(PredicateType.MOVEABLE, x, y).isNegative()
                 .and(PredicateType.PIT, x, y).isNegative()
                 .and(PredicateType.GOLD, x, y).isNegative()
-                .and(PredicateType.OBSTACLE, x, y).isNegative();
+                .and(PredicateType.OBSTACLE, x, y).isNegative()
+                .getHead();
         }
 
         public bool precondition(FOLFact fact) {
@@ -90,7 +92,8 @@
                 .and(PredicateType.GLITTER, x, y - 1)
                 .and(PredicateType.PIT, x, y).isNegative()
                 .and(PredicateType.WUMPUS, x, y).isNegative()
-                .and(PredicateType.OBSTACLE, x, y).isNegative();
+                .and(PredicateType.OBSTACLE, x, y).isNegative()
+                .getHead();
         }
 
         public bool precondition(FOLFact fact) {
@@ -107,7 +110,8 @@
             return new FOLFact(PredicateType.WUMPUS, x + 1, y)
                 .or(PredicateType.WUMPUS, x - 1, y)
                 .or(PredicateType.WUMPUS, x, y + 1)
-                .or(PredicateType.WUMPUS, x, y - 1);
+                .or(PredicateType.WUMPUS, x, y - 1)
+                .getHead();
         }
 
         public bool precondition(FOLFact fact) {
@@ -124,7 +128,8 @@
             return new FOLFact(PredicateType.GOLD, x + 1, y)
                 .or(PredicateType.GOLD, x - 1, y)
                 .or(PredicateType.GOLD, x, y + 1)
-                .or(PredicateType.GOLD, x, y - 1);
+                .or(PredicateType.GOLD, x, y - 1)
+                .getHead();
         }
 
         public bool precondition(FOLFact fact) {
