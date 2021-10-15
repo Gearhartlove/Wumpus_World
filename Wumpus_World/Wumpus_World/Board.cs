@@ -5,7 +5,18 @@ namespace Wumpus_World {
     public class Board {
         private Cell[,] board;
         //indexer to access board cells easier
-        public Cell this[int x, int y] => board[x, y];
+        public Cell this[int x, int y] {
+            get {
+                //Won't let the agent travel outside of the board
+                if (x >= size || y >= size || x < 0 || y < 0) {
+                    Console.WriteLine("You cannot travel to cell [" + x + "," + y +"]. " +
+                                      "It does not exist. Nothing Happens");
+                    return agent.getCell(this); //agent does not move, nothing happens
+                }
+            
+                return board[x,y];
+            }
+        }
         //used to place Gold and Spawn cells efficiently without overriding another State 
         private List<Cell> EmptyCells; 
         // spawn cell
@@ -22,6 +33,9 @@ namespace Wumpus_World {
         private Random rand;
         // Agent must be manually assigned using SetAgent() Method
         private Agent agent;
+        // Number of Wumpuses on the board
+        private int wumpusCount = 0;
+        public int GetWumpusCount => wumpusCount;
         
         /// <summary>
         /// Creates a Wumpus board. Uses the probabilities defined above to allocate board states and modifiers.
@@ -68,6 +82,7 @@ namespace Wumpus_World {
                     double r = rand.NextDouble();
                     if (r < pWumpus) {
                         board[i, j].S = State.Wumpus;
+                        wumpusCount++; // add 1 to total number of wumpuses on the board
                     }
 
                     if (r > pWumpus && r < pWumpus + pObstacle) {

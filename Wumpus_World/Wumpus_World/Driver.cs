@@ -21,6 +21,7 @@ namespace Wumpus_World {
         /// </summary>
         public void RunTestWumpusWorld(Agent agent) {
             Board board = new Board(5);
+            agent.SetBoard(board);
             agent.Navigate(board);
         }
         
@@ -32,6 +33,8 @@ namespace Wumpus_World {
                 int size = boardSize * 5; 
                 for (int boardNum = 1; boardNum <= 10; boardNum++) {
                     Board board = new Board(size);
+                    foa.SetBoard(board);
+                    ra.SetBoard(board);
                     foa.Navigate(board);
                     ra.Navigate(board);
                 }
