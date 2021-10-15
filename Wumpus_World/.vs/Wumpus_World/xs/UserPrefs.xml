@@ -1,22 +1,22 @@
 ﻿<Properties StartupConfiguration="{A6142CA9-1CBE-46FA-B2FA-F7EA8A79338D}|Default">
   <MonoDevelop.Ide.ItemProperties.Wumpus__World PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Wumpus_World/Modifier.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Wumpus_World/ReflexAgent.cs">
     <Files>
-      <File FileName="Wumpus_World/Statistics.cs" Line="48" Column="33" />
-      <File FileName="Wumpus_World/Agent.cs" Line="39" Column="1" />
-      <File FileName="Wumpus_World/ReflexAgent.cs" Line="102" Column="1" />
+      <File FileName="Wumpus_World/Statistics.cs" Line="29" Column="32" />
+      <File FileName="Wumpus_World/Agent.cs" Line="374" Column="1" />
+      <File FileName="Wumpus_World/ReflexAgent.cs" Line="103" Column="33" />
       <File FileName="Wumpus_World/Program.cs" />
       <File FileName="Wumpus_World/Driver.cs" />
-      <File FileName="Wumpus_World/Board.cs" Line="150" Column="1" />
-      <File FileName="Wumpus_World/Cell.cs" Line="1" Column="1" />
-      <File FileName="Wumpus_World/Modifier.cs" Line="39" Column="1" />
+      <File FileName="Wumpus_World/Board.cs" Line="151" Column="1" />
+      <File FileName="Wumpus_World/Cell.cs" Line="31" Column="1" />
+      <File FileName="Wumpus_World/Modifier.cs" Line="29" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="Wumpus_World" expanded="True">
             <Node name="Wumpus_World" expanded="True">
-              <Node name="Modifier.cs" selected="True" />
+              <Node name="ReflexAgent.cs" selected="True" />
             </Node>
           </Node>
         </State>
@@ -26,9 +26,7 @@
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/Thesus/Desktop/github/Wumpus_World/Wumpus_World/Wumpus_World/ReflexAgent.cs" relfile="Wumpus_World/ReflexAgent.cs" line="98" column="13" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MultiItemStartupConfigurations />
 </Properties>
