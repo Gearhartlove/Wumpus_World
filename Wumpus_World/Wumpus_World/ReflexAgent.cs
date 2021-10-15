@@ -12,12 +12,21 @@ namespace Wumpus_World
         // Truth values required for solving
         bool isSolved = false;
         bool isDead = false;
+        bool agentJustSpawned = true;
+
+        // Variable which determines when the agent desparately needs to find the gold
+        bool isDesparate = false;
+        // Variable to determine how desparate the agent is
+        int desparateLevel = 0;
 
         // Variable to reference the board
         Board board;
 
         // Variable to hold the current cell the agent is in
         Cell currentCell;
+
+        // Variable to hold the direction the agent came from
+        Direction lastCellDirection;
 
         // X and Y values of the current cell
         int cellX;
@@ -84,6 +93,12 @@ namespace Wumpus_World
         {
             // Variable to determine when to take risks that could lead to vicotry
             bool willTakeRisks = false;
+            // Variable to determine when the agent will avoid pits
+            bool willAvoidPits = false;
+            // Variable to determine when the agent will attack nearby Wumpus'
+            bool willAttackWumpus = false;
+            // Variable to determine when the agent will avoid a Wumpus
+            bool willAvoidWumpus = false;
 
             UpdateCurrentCell();
 
@@ -97,79 +112,211 @@ namespace Wumpus_World
             else
                 willTakeRisks = false;
 
-            // Explore:
+            // Change behavior if near pit
+            if (mods.isBreeze)
+                willAvoidPits = true;
+            else
+                willAvoidPits = false;
+
+            // Change behavior if near Wumpus
+            if (mods.isSmell)
+            {
+                willAvoidWumpus = true;
+                willAttackWumpus = true;
+            }
+            else
+            {
+                willAvoidWumpus = false;
+                willAttackWumpus = false;
+            }
+
+            //TODO: SHOOT THE WUMPUS IF NEAR ONE
+
+            // Base exploration behavior:
             // Goes to cells not yet explored in search of gold
+            // Avoids dangers unless taking a risk is the only option
             if (IsMoveValid(cellX, cellY + 1)
                 && !willTakeRisks && !QueryVisited(board[cellX, cellY + 1]))
             {
-                MoveNorth();
-                UpdateCurrentCell();
-                stats.IncrementStat('A');
+                if (agentJustSpawned)
+                {
+                    MoveNorth();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.South;
+                }
+                else if (!agentJustSpawned && !willAvoidPits && !willAvoidWumpus)
+                {
+                    MoveNorth();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.South;
+                }
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
+                {
+                    MoveBack();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                }
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
+                {
+                    MoveNorth();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.South;
+                }
             }
             else if (IsMoveValid(cellX + 1, cellY)
                 && !willTakeRisks && !QueryVisited(board[cellX + 1, cellY]))
             {
-                MoveEast();
-                UpdateCurrentCell();
-                stats.IncrementStat('A');
+                if (agentJustSpawned)
+                {
+                    MoveEast();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.West;
+                }
+                else if (!agentJustSpawned && !willAvoidPits && !willAvoidWumpus)
+                {
+                    MoveEast();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.West;
+                }
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
+                {
+                    MoveBack();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                }
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
+                {
+                    MoveEast();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.West;
+                }
             }
             else if (IsMoveValid(cellX, cellY - 1)
                 && !willTakeRisks && !QueryVisited(board[cellX, cellY - 1]))
             {
-                MoveSouth();
-                UpdateCurrentCell();
-                stats.IncrementStat('A');
+                if (agentJustSpawned)
+                {
+                    MoveSouth();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.North;
+                }
+                else if (!agentJustSpawned && !willAvoidPits && !willAvoidWumpus)
+                {
+                    MoveSouth();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.North;
+                }
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
+                {
+                    MoveBack();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                }
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
+                {
+                    MoveSouth();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.North;
+                }
             }
             else if (IsMoveValid(cellX - 1, cellY)
                 && !willTakeRisks && !QueryVisited(board[cellX - 1, cellY]))
             {
-                MoveWest();
-                UpdateCurrentCell();
-                stats.IncrementStat('A');
+                if (agentJustSpawned)
+                {
+                    MoveWest();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.East;
+                }
+                else if (!agentJustSpawned && !willAvoidPits && !willAvoidWumpus)
+                {
+                    MoveWest();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.East;
+                }
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
+                {
+                    MoveBack();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                }
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
+                {
+                    MoveWest();
+                    UpdateCurrentCell();
+                    stats.IncrementStat('A');
+                    lastCellDirection = Direction.East;
+                }
             }
 
             // Prevents agent from getting stuck when
             // it's already explored nearby cells
             else if (!willTakeRisks)
             {
-                int choice = random.Next(4);
+                bool decidedMove = false;
+                int decisions = 0;
 
-                switch (choice)
+                // Decide where to move so long as it's a valid move
+                while (!decidedMove && decisions <= 16)
                 {
-                    case 0:
-                        if (IsMoveValid(cellX, cellY + 1))
-                        {
-                            MoveNorth();
-                            UpdateCurrentCell();
-                            stats.IncrementStat('A');
-                        }
-                        break;
-                    case 1:
-                        if (IsMoveValid(cellX + 1, cellY))
-                        {
-                            MoveEast();
-                            UpdateCurrentCell();
-                            stats.IncrementStat('A');
-                        }
-                        break;
-                    case 2:
-                        if (IsMoveValid(cellX, cellY - 1))
-                        {
-                            MoveSouth();
-                            UpdateCurrentCell();
-                            stats.IncrementStat('A');
-                        }
-                        break;
-                    case 3:
-                        if (IsMoveValid(cellX - 1, cellY))
-                        {
-                            MoveWest();
-                            UpdateCurrentCell();
-                            stats.IncrementStat('A');
-                        }
-                        break;
-                    default:
-                        break;
+                    decisions++;
+                    int choice = random.Next(4);
+                    switch (choice)
+                    {
+                        case 0:
+                            if (IsMoveValid(cellX, cellY + 1))
+                            {
+                                decidedMove = true;
+                                MoveNorth();
+                                UpdateCurrentCell();
+                                stats.IncrementStat('A');
+                                lastCellDirection = Direction.South;
+                            }
+                            break;
+                        case 1:
+                            if (IsMoveValid(cellX + 1, cellY))
+                            {
+                                decidedMove = true;
+                                MoveEast();
+                                UpdateCurrentCell();
+                                stats.IncrementStat('A');
+                                lastCellDirection = Direction.West;
+                            }
+                            break;
+                        case 2:
+                            if (IsMoveValid(cellX, cellY - 1))
+                            {
+                                decidedMove = true;
+                                MoveSouth();
+                                UpdateCurrentCell();
+                                stats.IncrementStat('A');
+                                lastCellDirection = Direction.North;
+                            }
+                            break;
+                        case 3:
+                            if (IsMoveValid(cellX - 1, cellY))
+                            {
+                                decidedMove = true;
+                                MoveWest();
+                                UpdateCurrentCell();
+                                stats.IncrementStat('A');
+                                lastCellDirection = Direction.East;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
 
@@ -178,91 +325,130 @@ namespace Wumpus_World
             if (willTakeRisks)
             {
                 bool inGoldCell = false;
-                int direction = 0;
+                int adjacentCell = 0;
 
                 while (!inGoldCell && !isDead)
                 {
-                    switch (direction)
+                    switch (adjacentCell)
                     {
                         case 0:
                             if (IsMoveValid(cellX, cellY + 1) && !QueryVisited(board[cellX, cellY + 1]))
                             {
-                                Console.WriteLine("M5NS:");
                                 MoveNorth();
                                 stats.IncrementStat('A');
                                 UpdateCurrentCell();
+                                lastCellDirection = Direction.South;
                                 DeathCheck();
                                 if (currentCell.GetState() == State.Gold)
                                     inGoldCell = true;
                                 else
                                 {
-                                    MoveSouth();
+                                    Console.WriteLine(board.ToString());
+                                    MoveBack();
                                     UpdateCurrentCell();
                                     stats.IncrementStat('A');
+                                    Console.WriteLine(board.ToString());
                                 }
                             }
                             break;
                         case 1:
                             if (IsMoveValid(cellX + 1, cellY) && !QueryVisited(board[cellX + 1, cellY]))
                             {
-                                Console.WriteLine("M6EW:");
                                 MoveEast();
                                 stats.IncrementStat('A');
                                 UpdateCurrentCell();
+                                lastCellDirection = Direction.West;
                                 DeathCheck();
                                 if (currentCell.GetState() == State.Gold)
                                     inGoldCell = true;
                                 else
                                 {
-                                    MoveWest();
+                                    Console.WriteLine(board.ToString());
+                                    MoveBack();
                                     UpdateCurrentCell();
                                     stats.IncrementStat('A');
+                                    Console.WriteLine(board.ToString());
                                 }
                             }
                             break;
                         case 2:
                             if (IsMoveValid(cellX, cellY - 1) && !QueryVisited(board[cellX, cellY - 1]))
                             {
-                                Console.WriteLine("M7SN:");
                                 MoveSouth();
                                 stats.IncrementStat('A');
                                 UpdateCurrentCell();
+                                lastCellDirection = Direction.North;
                                 DeathCheck();
                                 if (currentCell.GetState() == State.Gold)
                                     inGoldCell = true;
                                 else
                                 {
-                                    MoveNorth();
+                                    Console.WriteLine(board.ToString());
+                                    MoveBack();
                                     UpdateCurrentCell();
                                     stats.IncrementStat('A');
+                                    Console.WriteLine(board.ToString());
                                 }
                             }
                             break;
                         case 3:
                             if (IsMoveValid(cellX - 1, cellY) && !QueryVisited(board[cellX - 1, cellY]))
                             {
-                                Console.WriteLine("M8WE:");
                                 MoveWest();
                                 stats.IncrementStat('A');
                                 UpdateCurrentCell();
+                                lastCellDirection = Direction.South;
                                 DeathCheck();
                                 if (currentCell.GetState() == State.Gold)
                                     inGoldCell = true;
                                 else
                                 {
-                                    MoveEast();
+                                    Console.WriteLine(board.ToString());
+                                    MoveBack();
                                     UpdateCurrentCell();
                                     stats.IncrementStat('A');
+                                    Console.WriteLine(board.ToString());
                                 }
                             }
                             break;
                         default:
                             break;
                     }
-                    direction++;
+                    adjacentCell++;
                 }
             }
-            UpdateCurrentCell();
+            agentJustSpawned = false;
+        }
+
+        /// <summary>
+        /// Moves the agent to the last cell it was in
+        /// </summary>
+        void MoveBack()
+        {
+            if (desparateLevel >= 5)
+                isDesparate = true;
+            desparateLevel++;
+
+            if (lastCellDirection == Direction.North)
+            {
+                MoveNorth();
+                lastCellDirection = Direction.South;
+            }
+            else if (lastCellDirection == Direction.East)
+            {
+                MoveEast();
+                lastCellDirection = Direction.West;
+            }
+            else if (lastCellDirection == Direction.South)
+            {
+                MoveSouth();
+                lastCellDirection = Direction.North;
+            }
+            else if (lastCellDirection == Direction.West)
+            {
+                MoveWest();
+                lastCellDirection = Direction.East;
+            }
         }
 
         // Method to update the current cell the agent is in
@@ -291,8 +477,11 @@ namespace Wumpus_World
                 return false;
             if (_y > board.GetSize - 1 || _y < 0)
                 return false;
-            else
-                return true;
+
+            if (board[_x, _y].GetState() == State.Obstacle && QueryVisited(board[_x, _y]))
+                return false;
+
+            return true;
         }
 
         /// <summary>

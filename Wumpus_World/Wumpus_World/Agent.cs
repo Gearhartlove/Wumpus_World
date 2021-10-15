@@ -1,31 +1,51 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace Wumpus_World {
-    public class Agent {
+namespace Wumpus_World
+{
+    public class Agent
+    {
 
         private Direction facing = Direction.North;
         private int currentX, currentY;
         private int previousX, previousY;
+        private int arrowX, arrowY;
+        private int arrowCount;
         private int score = 0;
         private Board board;
-        private Dictionary<Tuple<int,int>, bool> cellsVisited = new Dictionary<Tuple<int, int>, bool>();
+        private Dictionary<Tuple<int, int>, bool> cellsVisited = new Dictionary<Tuple<int, int>, bool>();
 
-        public void SpawnAgent(Cell spawn) {
+        /// <summary>
+        /// Spawn the agent on the board.
+        /// </summary>
+        /// <param name="spawn"></param>
+        public void SpawnAgent(Cell spawn)
+        {
             currentX = spawn.getX;
             currentY = spawn.getY;
-            
+
             UpdateVisited();
-        } 
-        
-        public Cell getCell(Board board) {
+        }
+
+        /// <summary>
+        /// Get specific cell from the board.
+        /// </summary>
+        /// <param name="board"></param>
+        /// <returns></returns>
+        public Cell getCell(Board board)
+        {
             return board[currentX, currentY];
         }
 
-        public void SetBoard(Board board) {
+        /// <summary>
+        /// Assign the board to the agent.
+        /// </summary>
+        /// <param name="board"></param>
+        public void SetBoard(Board board)
+        {
             this.board = board;
+            arrowCount = board.GetWumpusCount;
         }
 
         /// <summary>
@@ -33,16 +53,113 @@ namespace Wumpus_World {
         /// logic, depending on the type of agent. Will be overriden by children.
         /// </summary>
         /// <param name="board"></param>
-        public virtual void Navigate(Board board) {
+        public virtual void Navigate(Board board)
+        {
             board.SetAgent(this); // NEEDS TO BE INCLUDED FOR BOARD TO KNOW WHERE THE AGENT IS AND PRINT CORRECTLY.
             // Put navigating logic below
         }
 
-        protected State walkForward() {
+        /// <summary>
+        /// Agent shoots in the direction they are facing. If it hits a Wumpus, award points (100);
+        /// </summary>
+        public void Shoot()
+        {
+            if (arrowCount > 0)
+            {
+                switch (facing)
+                {
+                    case Direction.North:
+                        while (arrowY < board.GetSize)
+                        {
+                            arrowY++;
+                            if (ObstacleShot()) break;
+                            if (WumpusShot())
+                            {
+                                // reward function
+                                break;
+                            }
+                        }
+                        break;
+
+                    case Direction.South:
+                        while (arrowY >= 0)
+                        {
+                            arrowY--;
+                            if (ObstacleShot()) break;
+                            if (WumpusShot())
+                            {
+                                // reward function
+                                break;
+                            }
+                        }
+                        break;
+
+                    case Direction.East:
+                        while (arrowX >= 0)
+                        {
+                            arrowY--;
+                            if (ObstacleShot()) break;
+                            if (WumpusShot())
+                            {
+                                // reward function 
+                                break;
+                            }
+                        }
+                        break;
+
+                    case Direction.West:
+                        while (arrowX <= board.GetSize)
+                        {
+                            arrowX++;
+                            if (ObstacleShot()) break;
+                            if (WumpusShot())
+                            {
+                                // reward function
+                                break;
+                            }
+                        }
+                        break;
+                }
+
+                score++;
+                arrowCount--;
+                // reset arrow position to agent
+                arrowX = currentX;
+                arrowY = currentY;
+            }
+        }
+
+        /// <summary>
+        /// Check if wumpus was shot.
+        /// </summary>
+        /// <returns></returns>
+        private bool WumpusShot()
+        {
+            if (board[arrowX, arrowY].GetState() == State.Wumpus) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Check if obstacle was shot.
+        /// </summary>
+        /// <returns></returns>
+        private bool ObstacleShot()
+        {
+            if (board[arrowX, arrowY].GetState() == State.Obstacle) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Walk the agent forward, depending on the direction the agent is facing.
+        /// </summary>
+        /// <returns></returns>
+        protected State walkForward()
+        {
             int prevX = currentX;
             int prevY = currentY;
-            
-            switch (facing) {
+
+            switch (facing)
+            {
                 case Direction.North:
                     currentY++;
                     break;
@@ -59,14 +176,20 @@ namespace Wumpus_World {
             UpdateVisited(); // update visited cells
             score++;
             // checks if wall, does not let the agent move to wall cell
-            if (ObstacleCheck(board[currentX, currentY].GetState(), prevX, prevY)) {
+            if (ObstacleCheck(board[currentX, currentY].GetState(), prevX, prevY))
+            {
                 return State.Obstacle;
             }
             return board[currentX, currentY].GetState();
         }
-            
-        protected void turnRight() {
-            switch (facing) {
+
+        /// <summary>
+        /// Turn the agent right.
+        /// </summary>
+        protected void turnRight()
+        {
+            switch (facing)
+            {
                 case Direction.North:
                     facing = Direction.East;
                     break;
@@ -82,9 +205,14 @@ namespace Wumpus_World {
             }
             score++;
         }
-        
-        protected void turnLeft() {
-            switch (facing) {
+
+        /// <summary>
+        /// Turn the agent left.
+        /// </summary>
+        protected void turnLeft()
+        {
+            switch (facing)
+            {
                 case Direction.North:
                     facing = Direction.West;
                     break;
@@ -101,10 +229,12 @@ namespace Wumpus_World {
 
             score++;
         }
-        
+
         /// Helper method or "macro" to move agent North (turns included)
-        public State MoveNorth() {
-            switch (facing) {
+        public State MoveNorth()
+        {
+            switch (facing)
+            {
                 case Direction.North:
                     return walkForward();
                 case Direction.South:
@@ -120,10 +250,12 @@ namespace Wumpus_World {
             }
             return State.Empty;
         }
-        
+
         /// Helper method or "macro" to move agent South (turns included)
-        public State MoveSouth() {
-            switch (facing) {
+        public State MoveSouth()
+        {
+            switch (facing)
+            {
                 case Direction.North:
                     turnRight(); // right(north) => East
                     turnRight(); // right(east) => South
@@ -139,10 +271,12 @@ namespace Wumpus_World {
             }
             return State.Empty;
         }
-        
+
         /// Helper method or "macro" to move agent West (turns included)
-        public State MoveWest() {
-            switch (facing) {
+        public State MoveWest()
+        {
+            switch (facing)
+            {
                 case Direction.North:
                     turnLeft(); // left(North) => West
                     return walkForward();
@@ -158,10 +292,12 @@ namespace Wumpus_World {
             }
             return State.Empty; // will never happen
         }
-        
+
         // Helper method or "macro" to move agent Eorth (turns included)
-        public State MoveEast() {
-            switch (facing) {
+        public State MoveEast()
+        {
+            switch (facing)
+            {
                 case Direction.North:
                     turnRight(); // right(North) => East
                     return walkForward();
@@ -184,32 +320,44 @@ namespace Wumpus_World {
         /// <param name="state"></param>
         /// <param name="prevX"></param>
         /// <param name="prevY"></param>
-        public bool ObstacleCheck(State state, int prevX, int prevY) {
-            if (state == State.Obstacle) {
+        public bool ObstacleCheck(State state, int prevX, int prevY)
+        {
+            if (state == State.Obstacle)
+            {
                 currentX = prevX;
                 currentY = prevY;
                 return true; // yes their was a wall, bounce off
             }
             return false; // no wall in cell 
         }
-        
+
         /// <summary>
         /// Check if the agent is alive. Return true if alive, return false if dead.
         /// </summary>
         /// <returns></returns>
-        public bool AliveCheck() {
-            switch (board[currentX, currentY].GetState()) {
+        public bool AliveCheck()
+        {
+            switch (board[currentX, currentY].GetState())
+            {
                 case State.Wumpus:
                 case State.Pit:
                     return false;
             }
             return true;
         }
+
+        public bool GoldCheck()
+        {
+            if (board[currentX, currentY].GetState() == State.Gold) return true;
+            return false;
+        }
         /// <summary>
-        /// Updated cells visited list;
+        /// Updated cells visited list.
         /// </summary>
-        private void UpdateVisited() {
-            if (!cellsVisited.ContainsKey(new Tuple<int, int>(currentX, currentY))) {
+        private void UpdateVisited()
+        {
+            if (!cellsVisited.ContainsKey(new Tuple<int, int>(currentX, currentY)))
+            {
                 cellsVisited.Add(new Tuple<int, int>(currentX, currentY), true);
             }
         }
@@ -219,9 +367,86 @@ namespace Wumpus_World {
         /// </summary>
         /// <param name="cell"></param>
         /// <returns></returns>
-        public bool QueryVisited(Cell cell) {
+        public bool QueryVisited(Cell cell)
+        {
             if (!cellsVisited.ContainsKey(new Tuple<int, int>(cell.getX, cell.getY))) return false;
-            else return true;
+            return true;
         }
+
+        /// <summary>
+        /// Greedy algorithm to find the shortest path to the desired cell.
+        /// Trying to travel to cells which are closer to the agent's current cell
+        /// from the goalCell, using only cells which the agent has traveled.
+        /// Greed on the slopes between current cell and agent's current cell.
+        /// </summary>
+        /// <param name="goalCell"></param>
+        /// <returns></returns>
+        public void TravelPath(Cell goalCell)
+        {
+            Stack<Cell> path = CalculatePath(goalCell);
+            path.Pop(); // have to pop this for program to work as intended
+            // travel the path
+            while (path.Count > 0)
+            {
+                Cell gotoCell = path.Pop();
+                int gotoX = gotoCell.getX;
+                int gotoY = gotoCell.getY;
+
+                // only change y direction
+                if (gotoX > currentX) MoveEast();
+                else if (gotoX < currentX) MoveWest();
+                else if (gotoY > currentY) MoveNorth();
+                else if (gotoY < currentY) MoveSouth();
+
+                // DEBUG 
+                Console.WriteLine(board);
+            }
+        }
+
+        private Stack<Cell> CalculatePath(Cell goalCell)
+        {
+            // cells to not path too, dead ends
+            List<Cell> avoidCells = new List<Cell>();
+            // path for agent to travel to 
+            Stack<Cell> returnCells = new Stack<Cell>();
+            // starting point == returned cell ; back => forward
+            returnCells.Push(goalCell);
+            do
+            {
+                Dictionary<Cell, double> distance = new Dictionary<Cell, double>();
+
+                // step 1: look at the current cells surroundings , ignore the cells in the avoid Cells, and 
+                // calculate distance. 
+                foreach (Cell c in board.CellNeighbors(returnCells.Peek()))
+                {
+                    // if c is not avoided and visited, proceed
+                    if (!avoidCells.Contains(c) && QueryVisited(c) && !returnCells.Contains(c))
+                    {
+                        distance.Add(c, CalcDistance(goalCell, c));
+                    }
+                }
+
+                // if there is a possible path, calculate which cell to travel to next
+                if (distance.Count > 0)
+                {
+                    // get smallest distance
+                    double min = distance.Min(x => x.Value);
+                    Cell leaf = distance.FirstOrDefault(x => x.Value.Equals(min)).Key;
+                    returnCells.Push(leaf);
+                }
+
+                // if not cells were recognized as travelable, remove the most recently considred cell, add it to the
+                // avoid cells list
+                else
+                {
+                    avoidCells.Add(returnCells.Pop());
+                }
+            } while (returnCells.Peek() != board[currentX, currentY]); // EXIT condition == stack starts with current pos
+            return returnCells;
+        }
+
+        // calculate the distance from player cell to desired cell
+        private double CalcDistance(Cell goalCell, Cell compCell) =>
+            Math.Sqrt((Math.Pow(goalCell.getX - compCell.getX, 2) + Math.Pow(goalCell.getY - compCell.getY, 2)));
     }
 }

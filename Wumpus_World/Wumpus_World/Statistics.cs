@@ -14,18 +14,43 @@ namespace Wumpus_World
             {'W', 0},
             {'D', 0},
             {'P', 0},
-            {'E', 0}
+            {'E', 0},
+            {'S', 0}
         };
 
         /// <summary>
         /// Increases the desired statistic by one
         /// A for actions, G for gold, K for kills, W for Wumpus deaths,
-        /// D for total deaths, P for pit deaths, E for cells explored
+        /// D for total deaths, P for pit deaths, E for cells explored, S for score
         /// </summary>
         /// <param name="_key"></param>
         public void IncrementStat(char _key)
         {
             agentStats[_key]++;
+        }
+
+        /// <summary>
+        /// Quickly add the correct score when slaying a Wumpus
+        /// </summary>
+        public void KilledWumpus()
+        {
+            agentStats['S'] += 100;
+        }
+
+        /// <summary>
+        /// Quickly add the correct score when finding gold
+        /// </summary>
+        public void GoldAquired()
+        {
+            agentStats['S'] += 1000;
+        }
+
+        /// <summary>
+        /// Removes a point from the score for each action used by an agent
+        /// </summary>
+        public void FactorInActions()
+        {
+            agentStats['S'] -= agentStats['A'];
         }
 
         /// <summary>
