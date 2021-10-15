@@ -1,10 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Wumpus_World {
     public class Agent {
@@ -52,7 +48,7 @@ namespace Wumpus_World {
         /// logic, depending on the type of agent. Will be overriden by children.
         /// </summary>
         /// <param name="board"></param>
-        public void Navigate(Board board) {
+        public virtual void Navigate(Board board) {
             board.SetAgent(this); // NEEDS TO BE INCLUDED FOR BOARD TO KNOW WHERE THE AGENT IS AND PRINT CORRECTLY.
             // Put navigating logic below
         }
@@ -345,6 +341,7 @@ namespace Wumpus_World {
         /// <returns></returns>
         public void TravelPath(Cell goalCell) {
             Stack<Cell> path = CalculatePath(goalCell);
+            path.Pop();
             // travel the path
             while (path.Count > 0) {
                 Cell gotoCell = path.Pop();
@@ -353,16 +350,13 @@ namespace Wumpus_World {
 
                 // only change y direction
                 // TODO: HAVE NOT tested if this works yet
-                if (gotoX == currentX) {
-                    if (gotoY > currentY) MoveNorth();
-                    else MoveSouth();
-                }
-                // only change x direction
-                // TODO: HAVE NOT tested if this works yet
-                else if (gotoY == currentY) {
-                    if (gotoX > currentX) MoveEast();
-                    else MoveWest();
-                }
+                if (gotoX > currentX) MoveEast();
+                else if (gotoX < currentX) MoveWest();
+                else if (gotoY > currentY) MoveNorth();
+                else if (gotoY < currentY) MoveSouth();
+                
+                // DEBUG 
+                Console.WriteLine(board);
             }
         }
 
@@ -372,7 +366,7 @@ namespace Wumpus_World {
             // path for agent to travel to 
             Stack<Cell> returnCells = new Stack<Cell>();
             // starting point == returned cell ; back => forward
-            returnCells.Append(goalCell);
+            returnCells.Push(goalCell);
             do {
                 Dictionary<Cell, double> distance = new Dictionary<Cell, double>();
                 // TODO: Check the CalcDistance values to see if they are working as intended
@@ -381,7 +375,7 @@ namespace Wumpus_World {
                 // calculate distance. 
                 foreach (Cell c in board.CellNeighbors(returnCells.Peek())) {
                     // if c is not avoided and visited, proceed
-                    if (!avoidCells.Contains(c) && QueryVisited(c)) {
+                    if (!avoidCells.Contains(c) && QueryVisited(c) && !returnCells.Contains(c)) {
                         distance.Add(c, CalcDistance(goalCell, c));
                     }
                 }
@@ -405,7 +399,6 @@ namespace Wumpus_World {
         }
 
         // calculate the distance from player cell to desired cell
-        // TODO: Debug if working correctly
         private double CalcDistance(Cell goalCell, Cell compCell)  => 
             Math.Sqrt((Math.Pow(goalCell.getX - compCell.getX, 2) + Math.Pow(goalCell.getY - compCell.getY, 2)));
     }
