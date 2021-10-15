@@ -1,10 +1,26 @@
-﻿namespace Wumpus_World {
+﻿using System.Runtime.CompilerServices;
+
+namespace Wumpus_World {
     
     //Defines rule functionality for ∀ x,y [PRECONDICTION] => [EVAL Return]
-    public interface FOLRule {
-        FOLFact eval(int x, int y);
+    public abstract class FOLRule {
 
-        bool precondition(FOLFact fact);
+        protected int width, height;
+        protected FOLKnowledgeBase knowledgeBase;
+
+        protected FOLRule(int width, int height, FOLKnowledgeBase knowledgeBase) {
+            this.width = width;
+            this.height = height;
+            this.knowledgeBase = knowledgeBase;
+        }
+
+        protected abstract FOLFact eval(int x, int y);
+
+        protected abstract bool precondition(FOLFact fact);
+        
+        public FOLFact queryKnowledgeBase(FOLKnowledgeBase knowledgeBase) {
+            return null;
+        }
 
         public FOLFact unify(FOLFact fact) {
             if (precondition(fact)) return eval(fact.X, fact.Y);
@@ -17,8 +33,8 @@
     /// ∀ x,y PIT(x,y) => -SAFE(x,y) ∧ BREEZE(x +=- 1, y +=- 1) 
     /// </summary>
     public class PitQuantifier : FOLRule {
-        public FOLFact eval(int x, int y) {
-            var fact = new FOLFact(PredicateType.SAFE, x, y).isNegative()
+        protected override FOLFact eval(int x, int y) {
+            var fact = new FOLFact(PredicateType.SAFE, x, y, width, height, knowledgeBase).isNegative()
                 .and(PredicateType.BREEZE, x, y)
                 .and(PredicateType.BREEZE, x + 1, y)
                 .and(PredicateType.BREEZE, x - 1, y)
@@ -32,9 +48,33 @@
             return fact;
         }
 
-        public bool precondition(FOLFact fact) {
+        protected override bool precondition(FOLFact fact) {
             return fact.Type == PredicateType.PIT && !fact.hasNext();
         }
+
+        public PitQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
+    }
+    
+    /// <summary>
+    /// Quantifier 1: Keep your eye down and your finger in the air.
+    /// ∀ x,y PIT(x,y) => -SAFE(x,y) ∧ BREEZE(x +=- 1, y +=- 1) 
+    /// </summary>
+    public class BreezeQuantifier : FOLRule {
+        protected override FOLFact eval(int x, int y) {
+            var fact = new FOLFact(PredicateType.PIT, x + 1, y, width, height, knowledgeBase)
+                .or(PredicateType.PIT, x - 1, y)
+                .or(PredicateType.PIT, x, y + 1)
+                .or(PredicateType.PIT, x, y - 1)
+                .getHead();
+
+            return fact;
+        }
+
+        protected override bool precondition(FOLFact fact) {
+            return fact.Type == PredicateType.BREEZE && !fact.hasNext();
+        }
+
+        public BreezeQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
     }
 
     /// <summary>
@@ -42,8 +82,8 @@
     /// ∀ x,y WUMPUS(x,y) => -SAFE(x,y) ∧ SMELL(x +=- 1, y +=- 1) 
     /// </summary>
     public class WumpusQuantifier : FOLRule {
-        public FOLFact eval(int x, int y) {
-            return new FOLFact(PredicateType.SAFE, x, y).isNegative()
+        protected override FOLFact eval(int x, int y) {
+            return new FOLFact(PredicateType.SAFE, x, y, width, height, knowledgeBase).isNegative()
                 .and(PredicateType.SMELL, x, y)
                 .and(PredicateType.SMELL, x + 1, y)
                 .and(PredicateType.SMELL, x - 1, y)
@@ -52,12 +92,15 @@
                 .and(PredicateType.PIT, x, y).isNegative()
                 .and(PredicateType.GOLD, x, y).isNegative()
                 .and(PredicateType.OBSTACLE, x, y).isNegative()
+                .and(PredicateType.WUMPUS, x, y)
                 .getHead();
         }
 
-        public bool precondition(FOLFact fact) {
+        protected override bool precondition(FOLFact fact) {
             return fact.Type == PredicateType.WUMPUS && !fact.hasNext();
         }
+
+        public WumpusQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
     }
     
     /// <summary>
@@ -65,17 +108,19 @@
     /// ∀ x,y OBSTACLE(x,y) => -MOVABLE(x,y)
     /// </summary>
     public class ObstacleQuantifier : FOLRule {
-        public FOLFact eval(int x, int y) {
-            return new FOLFact(PredicateType.MOVEABLE, x, y).isNegative()
+        protected override FOLFact eval(int x, int y) {
+            return new FOLFact(PredicateType.MOVEABLE, x, y, width, height, knowledgeBase).isNegative()
                 .and(PredicateType.PIT, x, y).isNegative()
                 .and(PredicateType.GOLD, x, y).isNegative()
                 .and(PredicateType.OBSTACLE, x, y).isNegative()
                 .getHead();
         }
 
-        public bool precondition(FOLFact fact) {
+        protected override bool precondition(FOLFact fact) {
             return fact.Type == PredicateType.OBSTACLE && !fact.hasNext();
         }
+
+        public ObstacleQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
     }
     
     /// <summary>
@@ -83,8 +128,8 @@
     /// ∀ x,y GOLD(x,y) => SAFE(x,y) ∧ GLITTER(x+=-1, y+=-1) ∧ -OTHER(x, y)
     /// </summary>
     public class GoldQuantifier : FOLRule {
-        public FOLFact eval(int x, int y) {
-            return new FOLFact(PredicateType.SAFE, x, y)
+        protected override FOLFact eval(int x, int y) {
+            return new FOLFact(PredicateType.SAFE, x, y, width, height, knowledgeBase)
                 .and(PredicateType.GLITTER, x, y)
                 .and(PredicateType.GLITTER, x + 1, y)
                 .and(PredicateType.GLITTER, x - 1, y)
@@ -96,9 +141,11 @@
                 .getHead();
         }
 
-        public bool precondition(FOLFact fact) {
+        protected override bool precondition(FOLFact fact) {
             return fact.Type == PredicateType.GOLD && !fact.hasNext();
         }
+
+        public GoldQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
     }
 
     /// <summary>
@@ -106,17 +153,19 @@
     /// ∀ x,y SMELL(x,y) => WUMPUS(x+-1, y+-1) v 
     /// </summary>
     public class StenchQuantifier : FOLRule {
-        public FOLFact eval(int x, int y) {
-            return new FOLFact(PredicateType.WUMPUS, x + 1, y)
+        protected override FOLFact eval(int x, int y) {
+            return new FOLFact(PredicateType.WUMPUS, x + 1, y, width, height, knowledgeBase)
                 .or(PredicateType.WUMPUS, x - 1, y)
                 .or(PredicateType.WUMPUS, x, y + 1)
                 .or(PredicateType.WUMPUS, x, y - 1)
                 .getHead();
         }
 
-        public bool precondition(FOLFact fact) {
-            return fact.Type == PredicateType.SMELL && !fact.hasNext();
+        protected override bool precondition(FOLFact fact) {
+            return fact.Type == PredicateType.SMELL && !fact.hasNext() && !fact.Not;
         }
+
+        public StenchQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
     }
 
     /// <summary>
@@ -124,16 +173,74 @@
     /// ∀ x,y GLITTER(x,y) => GOLD(x+-1, y+-1) v 
     /// </summary>
     public class GlitterQuantifier : FOLRule {
-        public FOLFact eval(int x, int y) {
-            return new FOLFact(PredicateType.GOLD, x + 1, y)
+        protected override FOLFact eval(int x, int y) {
+            return new FOLFact(PredicateType.GOLD, x + 1, y, width, height, knowledgeBase)
                 .or(PredicateType.GOLD, x - 1, y)
                 .or(PredicateType.GOLD, x, y + 1)
                 .or(PredicateType.GOLD, x, y - 1)
                 .getHead();
         }
 
-        public bool precondition(FOLFact fact) {
-            return fact.Type == PredicateType.GLITTER && fact.hasNext();
+        protected override bool precondition(FOLFact fact) {
+            return fact.Type == PredicateType.GLITTER && !fact.hasNext() && !fact.Not;
         }
+
+        public GlitterQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
+    }
+
+    /// <summary>
+    /// Quantifier 7: Safety is where the scary things aren't.
+    /// ∀ x,y GLITTER(x,y) => GOLD(x+-1, y+-1) v 
+    /// </summary>
+    public class SafeQuantifier : FOLRule {
+        protected override FOLFact eval(int x, int y) {
+            return new FOLFact(PredicateType.GOLD, x, y, width, height, knowledgeBase).isNegative()
+               .and(PredicateType.WUMPUS, x, y).isNegative()
+               .and(PredicateType.OBSTACLE, x, y).isNegative()
+               .and(PredicateType.PIT, x, y).isNegative()
+               .getHead();
+        }
+
+        protected override bool precondition(FOLFact fact) {
+            return fact.Type == PredicateType.SAFE && !fact.hasNext() && !fact.Not;
+        }
+
+        public SafeQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
+    }
+    
+    /// <summary>
+    /// Quantifier 7: Safety is where the scary things aren't.
+    /// ∀ x,y GLITTER(x,y) => GOLD(x+-1, y+-1) v 
+    /// </summary>
+    public class EmptyQualifier : FOLRule {
+        protected override FOLFact eval(int x, int y) {
+            return new FOLFact(PredicateType.SAFE, x + 1, y, width, height, knowledgeBase)
+               .and(PredicateType.SAFE, x - 1, y)
+               .and(PredicateType.SAFE, x, y + 1)
+               .and(PredicateType.SAFE, x, y - 1)
+               .and(PredicateType.GOLD, x + 1, y).isNegative()
+               .and(PredicateType.WUMPUS, x + 1, y).isNegative()
+               .and(PredicateType.OBSTACLE, x + 1, y).isNegative()
+               .and(PredicateType.PIT, x + 1, y).isNegative()
+               .and(PredicateType.GOLD, x-1, y).isNegative()
+               .and(PredicateType.WUMPUS, x-1, y).isNegative()
+               .and(PredicateType.OBSTACLE, x-1, y).isNegative()
+               .and(PredicateType.PIT, x-1, y).isNegative()
+               .and(PredicateType.GOLD, x, y+1).isNegative()
+               .and(PredicateType.WUMPUS, x, y+1).isNegative()
+               .and(PredicateType.OBSTACLE, x, y+1).isNegative()
+               .and(PredicateType.PIT, x, y+1).isNegative()
+               .and(PredicateType.GOLD, x, y-1).isNegative()
+               .and(PredicateType.WUMPUS, x, y-1).isNegative()
+               .and(PredicateType.OBSTACLE, x, y-1).isNegative()
+               .and(PredicateType.PIT, x, y-1).isNegative()
+               .getHead();
+        }
+
+        protected override bool precondition(FOLFact fact) {
+            return fact.Type == PredicateType.EMPTY && !fact.hasNext() && !fact.Not;
+        }
+
+        public EmptyQualifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
     }
 }

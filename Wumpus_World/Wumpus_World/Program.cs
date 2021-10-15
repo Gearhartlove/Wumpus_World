@@ -12,10 +12,11 @@ namespace Wumpus_World
             // driver.RunTestWumpusWorld(foAgent); // test Wumpus World on 5x5 for specific agent (debugging)
             // //driver.RunWumpusWord();
 
-            FOLKnowledgeBase knowledgeBase = new FOLKnowledgeBase();
-            knowledgeBase.addPercept(new FOLFact(PredicateType.PIT, 1, 1));
-            knowledgeBase.processPercepts();
-            Console.WriteLine(knowledgeBase.simpleFactsString());
+            FOLKnowledgeBase knowledgeBase = new FOLKnowledgeBase(5, 5);
+            knowledgeBase.addPercept(PredicateType.EMPTY, 1, 1);
+            knowledgeBase.infer();
+            
+            Console.WriteLine(knowledgeBase);
         }
     }
 }

@@ -5,32 +5,42 @@ using System.Net.Mail;
 namespace Wumpus_World {
 	public class FOLFact {
 
-		private int x, y;
+		private int x, y, width, height;
 		private PredicateType type;
 		private bool not = false;
 
+		private FOLKnowledgeBase knowledgeBase;
+		
 		private FOLFact head;
 		private FOLFact next;
 		private UnifierType unifierType = UnifierType.NONE;
 
-		public FOLFact(PredicateType type, int x, int y, FOLFact head = null) {
+		
+		
+		protected internal FOLFact(PredicateType type, int x, int y, int width, int height, FOLKnowledgeBase knowledgeBase, FOLFact head = null) {
 			this.head = head != null ? head : this;
 			this.x = x;
 			this.y = y;
+			this.width = width;
+			this.height = height;
 			this.type = type;
+			this.knowledgeBase = knowledgeBase;
 		}
 
 		public FOLFact and(PredicateType type, int x, int y) {
-			FOLFact term = new FOLFact(type, x, y, head);
-			this.next = term;
-			this.unifierType = UnifierType.AND;
-			return term;
+			return newTerm(type, x, y, UnifierType.AND);
 		}
 		
 		public FOLFact or(PredicateType type, int x, int y) {
-			FOLFact term = new FOLFact(type, x, y, head);
+			return newTerm(type, x, y, UnifierType.OR);
+		}
+
+		private FOLFact newTerm(PredicateType type, int x, int y, UnifierType unifierType) {
+			if (x < 0 || y < 0 || x >= width || y >= height) return this;
+			if (knowledgeBase.cantBeOverriden(type, x, y)) return this;
+			FOLFact term = new FOLFact(type, x, y, width, height, knowledgeBase, head);
 			this.next = term;
-			this.unifierType = UnifierType.OR;
+			this.unifierType = unifierType;
 			return term;
 		}
 
@@ -93,6 +103,19 @@ namespace Wumpus_World {
 			set => not = value;
 		}
 
+		public FOLFact singleOut() {
+			return new FOLFact(type, x, y, width, height, knowledgeBase);
+		}
+
+		public override bool Equals(object obj) {
+			if (obj is FOLFact) {
+				FOLFact other = (FOLFact) obj;
+				return this.Type == other.type && this.x == other.x && this.y == other.y;
+			}
+			
+			return false;
+		}
+
 		public int X => x;
 
 		public int Y => y;
@@ -113,7 +136,8 @@ namespace Wumpus_World {
 		SMELL,
 		GLITTER,
 		BREEZE,
-		MOVEABLE
+		MOVEABLE,
+		EMPTY
 	}
 	
 	public enum UnifierType {
