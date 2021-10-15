@@ -308,6 +308,11 @@ namespace Wumpus_World {
             }
             return true;
         }
+
+        public bool GoldCheck() {
+            if (board[currentX, currentY].GetState() == State.Gold) return true;
+            return false;
+        }
         /// <summary>
         /// Updated cells visited list;
         /// </summary>
