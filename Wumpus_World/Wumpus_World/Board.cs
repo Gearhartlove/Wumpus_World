@@ -25,10 +25,10 @@ namespace Wumpus_World {
         private int size = 0;
         public int GetSize => size;
         // Board probabilities
-        private const double pWumpus = 0.1;
-        private const double pObstacle = 0.1;
-        private const double pPit = 0.2;
-        private const double pEmpty = 0.6;
+        private const double pWumpus = 0;
+        private const double pObstacle = 0;
+        private const double pPit = 0;
+        private const double pEmpty = 1;
         // Random generator
         private Random rand;
         // Agent must be manually assigned using SetAgent() Method
@@ -190,6 +190,36 @@ namespace Wumpus_World {
             agent = a;
             agent.SpawnAgent(spawn); // X and Y are private, which is why the board class calls the SpawnAgent method
                                      // apart of the Agent class. Design can improve.
+        }
+
+        /// <summary>
+        /// Returns a list of the cells neighboring a cell.
+        /// </summary>
+        public List<Cell> CellNeighbors(Cell c) {
+            List<Cell> returnCells = new List<Cell>();
+            int x = c.getX;
+            int y = c.getY;
+            
+            if (y + 1 < this.GetSize) {
+                returnCells.Add(board[x, y + 1]);
+            } 
+            
+            //look South
+            if (y - 1 > -1 ) {
+                returnCells.Add(board[x, y - 1]);
+            }
+
+            //look West
+            if (x - 1 > -1) {
+                returnCells.Add(board[x-1, y]);
+            }
+
+            //look East
+            if (x + 1 < this.GetSize) {
+                returnCells.Add(board[x+1,y]);
+            }
+
+            return returnCells;
         }
     }
 }
