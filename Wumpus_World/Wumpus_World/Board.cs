@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Wumpus_World {
     public class Board {
@@ -190,6 +191,36 @@ namespace Wumpus_World {
             agent = a;
             agent.SpawnAgent(spawn); // X and Y are private, which is why the board class calls the SpawnAgent method
                                      // apart of the Agent class. Design can improve.
+        }
+
+        /// <summary>
+        /// Returns a list of the cells neighboring a cell.
+        /// </summary>
+        public List<Cell> CellNeighbors(Cell c) {
+            List<Cell> returnCells = new List<Cell>();
+            int x = c.getX;
+            int y = c.getY;
+            
+            if (y + 1 < this.GetSize) {
+                returnCells.Add(board[x, y + 1]);
+            } 
+            
+            //look South
+            if (y - 1 > -1 ) {
+                returnCells.Add(board[x, y - 1]);
+            }
+
+            //look West
+            if (x - 1 > -1) {
+                returnCells.Add(board[x-1, y]);
+            }
+
+            //look East
+            if (x + 1 < this.GetSize) {
+                returnCells.Add(board[x+1,y]);
+            }
+
+            return returnCells;
         }
     }
 }

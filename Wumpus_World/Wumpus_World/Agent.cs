@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Wumpus_World {
@@ -314,7 +317,7 @@ namespace Wumpus_World {
             return false;
         }
         /// <summary>
-        /// Updated cells visited list;
+        /// Updated cells visited list.
         /// </summary>
         private void UpdateVisited() {
             if (!cellsVisited.ContainsKey(new Tuple<int, int>(currentX, currentY))) {
@@ -329,7 +332,79 @@ namespace Wumpus_World {
         /// <returns></returns>
         public bool QueryVisited(Cell cell) {
             if (!cellsVisited.ContainsKey(new Tuple<int, int>(cell.getX, cell.getY))) return false;
-            else return true;
+            return true;
         }
+
+        /// <summary>
+        /// Greedy algorithm to find the shortest path to the desired cell.
+        /// Trying to travel to cells which are closer to the agent's current cell
+        /// from the goalCell, using only cells which the agent has traveled.
+        /// Greed on the slopes between current cell and agent's current cell.
+        /// </summary>
+        /// <param name="goalCell"></param>
+        /// <returns></returns>
+        public void TravelPath(Cell goalCell) {
+            Stack<Cell> path = CalculatePath(goalCell);
+            // travel the path
+            while (path.Count > 0) {
+                Cell gotoCell = path.Pop();
+                int gotoX = gotoCell.getX;
+                int gotoY = gotoCell.getY;
+
+                // only change y direction
+                // TODO: HAVE NOT tested if this works yet
+                if (gotoX == currentX) {
+                    if (gotoY > currentY) MoveNorth();
+                    else MoveSouth();
+                }
+                // only change x direction
+                // TODO: HAVE NOT tested if this works yet
+                else if (gotoY == currentY) {
+                    if (gotoX > currentX) MoveEast();
+                    else MoveWest();
+                }
+            }
+        }
+
+        private Stack<Cell> CalculatePath(Cell goalCell) {
+            int goalX = goalCell.getX;
+            int goalY = goalCell.getY;
+            Dictionary<Cell, double> distance = new Dictionary<Cell, double>();
+            List<Cell> avoidCells = new List<Cell>();
+            Stack<Cell> returnCells = new Stack<Cell>();
+            returnCells.Append(goalCell);
+            do {
+                // TODO: Check the CalcDistance values to see if they are working as intended
+                // step 1: look at the current cells surroundings , ignore the cells in the avoid Cells, and 
+                // calculate distance. 
+                foreach (Cell c in board.CellNeighbors(returnCells.Peek())) {
+                    // if c is not avoided and visited, proceed
+                    if (!avoidCells.Contains(c) && QueryVisited(c)) {
+                        distance.Add(c, CalcDistance(goalCell, c));
+                    }
+                }
+
+                if (distance.Count > 0) {
+                    // get smallest distance
+                    double min = distance.Min(x => x.Value);
+                    // TODO Check if this loss of precision gives me a bug
+                    Cell leaf = distance.FirstOrDefault(x => x.Value.Equals(min)).Key;
+                    returnCells.Push(leaf);
+                }
+
+                else {
+                    // remove cell from the stack, add it to avoid cells
+                    avoidCells.Add(returnCells.Pop());
+                }
+                // look for cell closer to agent's position, focus on that cell and append it to the list 
+                // keep going until a dead end. 
+                // Once dead end, remove cells from returnCells and add them to avoid Cells, then loop back to step 1
+
+            } while (returnCells.Peek() != board[currentX,currentY]);
+
+        }
+
+        private double CalcDistance(Cell goalCell, Cell compCell)  => 
+            Math.Sqrt((Math.Pow(goalCell.getX - compCell.getX, 2) + Math.Pow(goalCell.getY - compCell.getY, 2)));
     }
 }
