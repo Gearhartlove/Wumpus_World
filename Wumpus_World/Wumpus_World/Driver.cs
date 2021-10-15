@@ -3,7 +3,7 @@
 namespace Wumpus_World {
     public class Driver {
         // References of agents used throughout the program
-        private FOAgent foa;
+        private FOLAgent foa;
         private ReflexAgent ra;
         
         /// <summary>
@@ -11,7 +11,7 @@ namespace Wumpus_World {
         /// </summary>
         /// <param name="foa"></param>
         /// <param name="ra"></param>
-        public Driver(FOAgent foa, ReflexAgent ra) {
+        public Driver(FOLAgent foa, ReflexAgent ra) {
             this.foa = foa;
             this.ra = ra;
         }
