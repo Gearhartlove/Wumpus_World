@@ -367,14 +367,16 @@ namespace Wumpus_World {
         }
 
         private Stack<Cell> CalculatePath(Cell goalCell) {
-            int goalX = goalCell.getX;
-            int goalY = goalCell.getY;
-            Dictionary<Cell, double> distance = new Dictionary<Cell, double>();
+            // cells to not path too, dead ends
             List<Cell> avoidCells = new List<Cell>();
+            // path for agent to travel to 
             Stack<Cell> returnCells = new Stack<Cell>();
+            // starting point == returned cell ; back => forward
             returnCells.Append(goalCell);
             do {
+                Dictionary<Cell, double> distance = new Dictionary<Cell, double>();
                 // TODO: Check the CalcDistance values to see if they are working as intended
+                
                 // step 1: look at the current cells surroundings , ignore the cells in the avoid Cells, and 
                 // calculate distance. 
                 foreach (Cell c in board.CellNeighbors(returnCells.Peek())) {
@@ -384,6 +386,7 @@ namespace Wumpus_World {
                     }
                 }
 
+                // if there is a possible path, calculate which cell to travel to next
                 if (distance.Count > 0) {
                     // get smallest distance
                     double min = distance.Min(x => x.Value);
@@ -392,18 +395,17 @@ namespace Wumpus_World {
                     returnCells.Push(leaf);
                 }
 
+                // if not cells were recognized as travelable, remove the most recently considred cell, add it to the
+                // avoid cells list
                 else {
-                    // remove cell from the stack, add it to avoid cells
                     avoidCells.Add(returnCells.Pop());
                 }
-                // look for cell closer to agent's position, focus on that cell and append it to the list 
-                // keep going until a dead end. 
-                // Once dead end, remove cells from returnCells and add them to avoid Cells, then loop back to step 1
-
-            } while (returnCells.Peek() != board[currentX,currentY]);
-
+            } while (returnCells.Peek() != board[currentX,currentY]); // EXIT condition == stack starts with current pos
+            return returnCells;
         }
 
+        // calculate the distance from player cell to desired cell
+        // TODO: Debug if working correctly
         private double CalcDistance(Cell goalCell, Cell compCell)  => 
             Math.Sqrt((Math.Pow(goalCell.getX - compCell.getX, 2) + Math.Pow(goalCell.getY - compCell.getY, 2)));
     }
