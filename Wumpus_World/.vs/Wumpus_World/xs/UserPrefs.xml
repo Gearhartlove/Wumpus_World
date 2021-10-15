@@ -1,21 +1,21 @@
 ﻿<Properties StartupConfiguration="{A6142CA9-1CBE-46FA-B2FA-F7EA8A79338D}|Default">
   <MonoDevelop.Ide.ItemProperties.Wumpus__World PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Wumpus_World/Agent.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Wumpus_World/ReflexAgent.cs">
     <Files>
       <File FileName="Wumpus_World/Statistics.cs" Line="48" Column="33" />
-      <File FileName="Wumpus_World/Agent.cs" Line="62" Column="1" />
-      <File FileName="Wumpus_World/ReflexAgent.cs" Line="191" Column="1" />
-      <File FileName="Wumpus_World/Program.cs" Line="14" Column="37" />
-      <File FileName="Wumpus_World/Driver.cs" Line="1" Column="1" />
-      <File FileName="Wumpus_World/Board.cs" Line="12" Column="21" />
-      <File FileName="Wumpus_World/Cell.cs" Line="31" Column="1" />
+      <File FileName="Wumpus_World/Agent.cs" />
+      <File FileName="Wumpus_World/ReflexAgent.cs" Line="206" Column="60" />
+      <File FileName="Wumpus_World/Program.cs" />
+      <File FileName="Wumpus_World/Driver.cs" />
+      <File FileName="Wumpus_World/Board.cs" />
+      <File FileName="Wumpus_World/Cell.cs" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="Wumpus_World" expanded="True">
             <Node name="Wumpus_World" expanded="True">
-              <Node name="Agent.cs" selected="True" />
+              <Node name="ReflexAgent.cs" selected="True" />
             </Node>
           </Node>
         </State>

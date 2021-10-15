@@ -67,8 +67,6 @@ namespace Wumpus_World
                 // The agent clears the board
                 if (currentCell.GetState() == State.Gold)
                 {
-                    Console.WriteLine("\nEntered gold\n");
-                    Console.WriteLine("Cleared board!");
                     isSolved = true;
                     stats.IncrementStat('G');
                 }
@@ -89,8 +87,6 @@ namespace Wumpus_World
 
             UpdateCurrentCell();
 
-            Console.WriteLine("RA starting ReflexMove() in Cell X " + cellX + ", and Cell Y " + cellY);
-
             // Contains turth values of the current cell
             // Informs agent of breeze, smell, glitter
             Modifier mods = board.GetModifiers(currentCell);
@@ -101,33 +97,35 @@ namespace Wumpus_World
             else
                 willTakeRisks = false;
 
+            // Explore:
+            // Goes to cells not yet explored in search of gold
             if (IsMoveValid(cellX, cellY + 1)
                 && !willTakeRisks && !QueryVisited(board[cellX, cellY + 1]))
             {
-                Console.WriteLine("M1N:");
                 MoveNorth();
                 UpdateCurrentCell();
+                stats.IncrementStat('A');
             }
             else if (IsMoveValid(cellX + 1, cellY)
                 && !willTakeRisks && !QueryVisited(board[cellX + 1, cellY]))
             {
-                Console.WriteLine("M2E:");
                 MoveEast();
                 UpdateCurrentCell();
+                stats.IncrementStat('A');
             }
             else if (IsMoveValid(cellX, cellY - 1)
                 && !willTakeRisks && !QueryVisited(board[cellX, cellY - 1]))
             {
-                Console.WriteLine("M3S:");
                 MoveSouth();
                 UpdateCurrentCell();
+                stats.IncrementStat('A');
             }
             else if (IsMoveValid(cellX - 1, cellY)
                 && !willTakeRisks && !QueryVisited(board[cellX - 1, cellY]))
             {
-                Console.WriteLine("M4W:");
                 MoveWest();
                 UpdateCurrentCell();
+                stats.IncrementStat('A');
             }
 
             // Prevents agent from getting stuck when
@@ -136,7 +134,6 @@ namespace Wumpus_World
             {
                 int choice = random.Next(4);
 
-                UpdateCurrentCell();
                 switch (choice)
                 {
                     case 0:
@@ -144,6 +141,7 @@ namespace Wumpus_World
                         {
                             MoveNorth();
                             UpdateCurrentCell();
+                            stats.IncrementStat('A');
                         }
                         break;
                     case 1:
@@ -151,6 +149,7 @@ namespace Wumpus_World
                         {
                             MoveEast();
                             UpdateCurrentCell();
+                            stats.IncrementStat('A');
                         }
                         break;
                     case 2:
@@ -158,6 +157,7 @@ namespace Wumpus_World
                         {
                             MoveSouth();
                             UpdateCurrentCell();
+                            stats.IncrementStat('A');
                         }
                         break;
                     case 3:
@@ -165,6 +165,7 @@ namespace Wumpus_World
                         {
                             MoveWest();
                             UpdateCurrentCell();
+                            stats.IncrementStat('A');
                         }
                         break;
                     default:
@@ -179,16 +180,16 @@ namespace Wumpus_World
                 bool inGoldCell = false;
                 int direction = 0;
 
-                //TODO: only move if cell is unexplored to save actions
                 while (!inGoldCell && !isDead)
                 {
                     switch (direction)
                     {
                         case 0:
-                            if (IsMoveValid(cellX, cellY + 1))
+                            if (IsMoveValid(cellX, cellY + 1) && !QueryVisited(board[cellX, cellY + 1]))
                             {
                                 Console.WriteLine("M5NS:");
                                 MoveNorth();
+                                stats.IncrementStat('A');
                                 UpdateCurrentCell();
                                 DeathCheck();
                                 if (currentCell.GetState() == State.Gold)
@@ -197,14 +198,16 @@ namespace Wumpus_World
                                 {
                                     MoveSouth();
                                     UpdateCurrentCell();
+                                    stats.IncrementStat('A');
                                 }
                             }
                             break;
                         case 1:
-                            if (IsMoveValid(cellX + 1, cellY))
+                            if (IsMoveValid(cellX + 1, cellY) && !QueryVisited(board[cellX + 1, cellY]))
                             {
                                 Console.WriteLine("M6EW:");
                                 MoveEast();
+                                stats.IncrementStat('A');
                                 UpdateCurrentCell();
                                 DeathCheck();
                                 if (currentCell.GetState() == State.Gold)
@@ -213,14 +216,16 @@ namespace Wumpus_World
                                 {
                                     MoveWest();
                                     UpdateCurrentCell();
+                                    stats.IncrementStat('A');
                                 }
                             }
                             break;
                         case 2:
-                            if (IsMoveValid(cellX, cellY - 1))
+                            if (IsMoveValid(cellX, cellY - 1) && !QueryVisited(board[cellX, cellY - 1]))
                             {
                                 Console.WriteLine("M7SN:");
                                 MoveSouth();
+                                stats.IncrementStat('A');
                                 UpdateCurrentCell();
                                 DeathCheck();
                                 if (currentCell.GetState() == State.Gold)
@@ -229,14 +234,16 @@ namespace Wumpus_World
                                 {
                                     MoveNorth();
                                     UpdateCurrentCell();
+                                    stats.IncrementStat('A');
                                 }
                             }
                             break;
                         case 3:
-                            if (IsMoveValid(cellX - 1, cellY))
+                            if (IsMoveValid(cellX - 1, cellY) && !QueryVisited(board[cellX - 1, cellY]))
                             {
                                 Console.WriteLine("M8WE:");
                                 MoveWest();
+                                stats.IncrementStat('A');
                                 UpdateCurrentCell();
                                 DeathCheck();
                                 if (currentCell.GetState() == State.Gold)
@@ -245,6 +252,7 @@ namespace Wumpus_World
                                 {
                                     MoveEast();
                                     UpdateCurrentCell();
+                                    stats.IncrementStat('A');
                                 }
                             }
                             break;
@@ -255,7 +263,6 @@ namespace Wumpus_World
                 }
             }
             UpdateCurrentCell();
-            Console.WriteLine("RA ending ReflexMove() in Cell X " + cellX + ", and Cell Y " + cellY);
         }
 
         // Method to update the current cell the agent is in
@@ -298,7 +305,6 @@ namespace Wumpus_World
             // The agent dies
             if (currentCell.GetState() == State.Wumpus)
             {
-                Console.WriteLine("\nEntered Wumpus\n");
                 isDead = true;
                 stats.IncrementStat('D');
                 stats.IncrementStat('W');
@@ -308,7 +314,6 @@ namespace Wumpus_World
             // The agent dies
             if (currentCell.GetState() == State.Pit)
             {
-                Console.WriteLine("\nEntered Pit\n");
                 isDead = true;
                 stats.IncrementStat('D');
                 stats.IncrementStat('P');
