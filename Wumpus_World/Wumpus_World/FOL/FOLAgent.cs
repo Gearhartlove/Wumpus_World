@@ -1,4 +1,6 @@
 namespace Wumpus_World {
-    public class FOAgent : Agent{
+    public class FOAgent : Agent {
+        
+        
     }
 }

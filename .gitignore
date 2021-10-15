@@ -1,6 +1,6 @@
 .DS_Store
 
-/Wumpus_World/obj/
-/Wumpus_World/bin/
-/.idea/
-/.vs/
+/Wumpus_World/Wumpus_World/obj/
+/Wumpus_World/Wumpus_World/bin/
+/Wumpus_World/.idea/
+/Wumpus_World/.vs/

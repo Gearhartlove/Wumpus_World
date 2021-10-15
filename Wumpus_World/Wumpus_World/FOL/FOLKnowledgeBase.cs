@@ -75,6 +75,8 @@ namespace Wumpus_World {
                     current = current.Next;
                 } while(current != null);
 
+                if(unknowns.Count == 0) continue;
+                
                 if (unknowns.Count == 1) {
                     bool allFalse = knowns.All(a => a == KnowledgeQuery.FALSE);
                     if (allFalse) {
