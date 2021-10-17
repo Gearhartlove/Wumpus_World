@@ -1,8 +1,8 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "/Users/gearhart/.dotnet/store/|arch|/|tfm|",
-      "/Users/gearhart/.nuget/packages"
+      "C:\\Users\\aweso\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\aweso\\.nuget\\packages"
     ]
   }
 }

@@ -164,7 +164,7 @@ namespace Wumpus_World {
             simpleFacts[fact.Type].Add(fact);
         }
 
-        private FOLFact getSimpleFact(PredicateType type, int x, int y) {
+        public FOLFact getSimpleFact(PredicateType type, int x, int y) {
             foreach (var fact in getSimpleFactsByType(type)) {
                 if (fact.X == x && fact.Y == y) return fact;
             }
@@ -172,7 +172,7 @@ namespace Wumpus_World {
             return null;
         }
 
-        private List<FOLFact> getSimpleFactsByType(PredicateType type) {
+        public List<FOLFact> getSimpleFactsByType(PredicateType type) {
             if(!simpleFacts.ContainsKey(type)) simpleFacts[type] = new List<FOLFact>();
             return simpleFacts[type];
         }
