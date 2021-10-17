@@ -27,8 +27,10 @@ namespace Wumpus_World {
                 if(modifiers.isSmell) knowledgeBase.addPercept(PredicateType.SMELL, currentX, currentX);
                 if(!modifiers.isBreeze && !modifiers.isGlitter && !modifiers.isSmell)
                     knowledgeBase.addPercept(PredicateType.EMPTY, currentX, currentY);
-                
+
                 knowledgeBase.infer();
+                Console.WriteLine(knowledgeBase.simpleFactsString());
+                Console.WriteLine(knowledgeBase.complexFactsString());
 
                 placesToGo.RemoveAll(i => !i.calcScore(currentX, currentY));
                 
