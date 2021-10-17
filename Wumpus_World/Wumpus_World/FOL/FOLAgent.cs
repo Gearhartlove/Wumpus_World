@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Wumpus_World {
     public class FOLAgent : Agent {
 
@@ -16,9 +18,11 @@ namespace Wumpus_World {
                 if(modifiers.isBreeze) knowledgeBase.addPercept(PredicateType.BREEZE, currentX, currentY);
                 if(modifiers.isGlitter) knowledgeBase.addPercept(PredicateType.GLITTER, currentX, currentY);
                 if(modifiers.isSmell) knowledgeBase.addPercept(PredicateType.SMELL, currentX, currentX);
+                if(!modifiers.isBreeze && !modifiers.isGlitter && !modifiers.isSmell)
+                    knowledgeBase.addPercept(PredicateType.EMPTY, currentX, currentY);
+                
+                
             }
-            
-           
         }
     }
 }

@@ -17,10 +17,6 @@ namespace Wumpus_World {
         protected abstract FOLFact eval(int x, int y);
 
         protected abstract bool precondition(FOLFact fact);
-        
-        public virtual FOLFact queryKnowledgeBase(FOLKnowledgeBase knowledgeBase) {
-            return null;
-        }
 
         public FOLFact unify(FOLFact fact) {
             if (precondition(fact)) return eval(fact.X, fact.Y);

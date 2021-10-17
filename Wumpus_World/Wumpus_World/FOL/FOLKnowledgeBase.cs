@@ -38,8 +38,7 @@ namespace Wumpus_World {
 
         public void infer() {
             processPercepts();
-            ruleQuery();
-            processComplexFacts();
+            reduceComplexFacts();
         }
         
         private void processPercepts() {
@@ -52,7 +51,7 @@ namespace Wumpus_World {
             }
         }
 
-        public void processComplexFacts() {
+        public void reduceComplexFacts() {
             int startCount = complexFacts.Count;
             for(int i = 0; i < startCount; i++) {
                 FOLFact complexFact = complexFacts.Dequeue();
@@ -62,16 +61,22 @@ namespace Wumpus_World {
                 
                 FOLFact current = complexFact;
                 do {
-                    var sf = queryFact(current.Type, current.X, current.Y);
-                    switch (sf) {
-                        case KnowledgeQuery.UNKNOWN:
-                            unknowns.Add(current.singleOut());
-                            break;
-                        case KnowledgeQuery.TRUE:
-                        case KnowledgeQuery.FALSE:
-                            knowns.Add(sf);
-                            break;
+                    if(!validStateCheck(current)) {
+                        knowns.Add(KnowledgeQuery.FALSE);
                     }
+                    else {
+                        var sf = queryFact(current.Type, current.X, current.Y);
+                        switch (sf) {
+                            case KnowledgeQuery.UNKNOWN:
+                                unknowns.Add(current.singleOut());
+                                break;
+                            case KnowledgeQuery.TRUE:
+                            case KnowledgeQuery.FALSE:
+                                knowns.Add(sf);
+                                break;
+                        }
+                    }
+                    
                     current = current.Next;
                 } while(current != null);
 
@@ -91,15 +96,55 @@ namespace Wumpus_World {
         }
         
         //Valid Check will check to see, based on facts, if a claim is valid or not.
-        public bool validCheck(FOLFact fact) {
+        /// <summary>
+        /// This method will check if the fact is valid based on what is in our knowledge base. This check is only
+        /// applied to facts that haven't yet been added to the knowledge base. This is used to reduce our complex
+        /// facts that we receive from some of the rules.
+        /// </summary>
+        /// <param name="fact"></param>
+        /// <returns></returns>
+        public bool validStateCheck(FOLFact fact) {
+            switch (fact.Type) {
+                case PredicateType.PIT:
+                    return !hasFactSurrounding(fact.X, fact.Y, PredicateType.EMPTY)
+                        || !hasFactAt(fact.X, fact.Y, PredicateType.WUMPUS, PredicateType.OBSTACLE, PredicateType.GOLD, PredicateType.EMPTY, PredicateType.SAFE);
+                case PredicateType.WUMPUS:
+                    return !hasFactSurrounding(fact.X, fact.Y, PredicateType.EMPTY)
+                        || !hasFactAt(fact.X, fact.Y, PredicateType.PIT, PredicateType.OBSTACLE, PredicateType.EMPTY, PredicateType.SAFE, PredicateType.GOLD);
+                case PredicateType.GOLD:
+                    return !hasFactSurrounding(fact.X, fact.Y, PredicateType.EMPTY)
+                        || !hasFactAt(fact.X, fact.Y, PredicateType.WUMPUS, PredicateType.PIT, PredicateType.OBSTACLE, PredicateType.EMPTY, PredicateType.SAFE);
+            }
             
+            return false;
         }
 
-        public void ruleQuery() {
-            foreach (var rule in rules) {
-                var result = rule.queryKnowledgeBase(this);
-                if(result != null) addFacts(result.separate().ToArray());
+        private bool hasFactSurrounding(int x, int y, params PredicateType[] types) {
+            foreach (var type in types) {
+                foreach (var fact in getSimpleFactsByType(type)) {
+                    if(fact.Not) continue;
+                    
+                    var b = (fact.X + 1 == x && fact.Y == y)
+                         || (fact.X - 1 == x && fact.Y == y)
+                         || (fact.X == x && fact.Y + 1 == y)
+                         || (fact.X == x && fact.Y - 1 == y);
+
+                    if (b) return true;
+                }
             }
+
+            return false;
+        }
+
+        private bool hasFactAt(int x, int y, params PredicateType[] types) {
+            foreach (var type in types) {
+                foreach (var fact in getSimpleFactsByType(type)) {
+                    if(fact.Not) continue;
+                    if (fact.X == x && fact.Y == y) return true;
+                }
+            }
+
+            return false;
         }
 
         private void addFacts(params FOLFact[] facts) {
@@ -120,14 +165,18 @@ namespace Wumpus_World {
         }
 
         private FOLFact getSimpleFact(PredicateType type, int x, int y) {
-            if (!simpleFacts.ContainsKey(type)) return null;
-            foreach (var fact in simpleFacts[type]) {
+            foreach (var fact in getSimpleFactsByType(type)) {
                 if (fact.X == x && fact.Y == y) return fact;
             }
 
             return null;
         }
-        
+
+        private List<FOLFact> getSimpleFactsByType(PredicateType type) {
+            if(!simpleFacts.ContainsKey(type)) simpleFacts[type] = new List<FOLFact>();
+            return simpleFacts[type];
+        }
+
         public KnowledgeQuery queryFact(PredicateType type, int x, int y) {
             FOLFact fact = getSimpleFact(type, x, y);
             if (fact == null) return KnowledgeQuery.UNKNOWN;
