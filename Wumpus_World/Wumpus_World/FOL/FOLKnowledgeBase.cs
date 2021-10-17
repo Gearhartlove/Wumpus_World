@@ -86,7 +86,10 @@ namespace Wumpus_World {
                     bool allFalse = knowns.All(a => a == KnowledgeQuery.FALSE);
                     if (allFalse) {
                         var f = unknowns.First();
-                        if(!cantBeOverriden(f.Type, f.X, f.Y)) addFacts(unknowns.First());
+                        if (!cantBeOverriden(f.Type, f.X, f.Y)) {
+                            Console.WriteLine("Fact Inferred! " + unknowns.First());
+                            addFacts(unknowns.First());
+                        }
                         continue;
                     }
                 }
