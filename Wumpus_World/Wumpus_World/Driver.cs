@@ -20,7 +20,7 @@ namespace Wumpus_World {
         /// For Debugging purposes, runs specific agent on 5x5 board.
         /// </summary>
         public void RunTestWumpusWorld(Agent agent) {
-            Board board = new Board(5);
+            Board board = new Board(7);
             agent.SetBoard(board);
             agent.Navigate(board);
         }
