@@ -18,7 +18,7 @@ namespace Wumpus_World {
 
         protected abstract bool precondition(FOLFact fact);
         
-        public FOLFact queryKnowledgeBase(FOLKnowledgeBase knowledgeBase) {
+        public virtual FOLFact queryKnowledgeBase(FOLKnowledgeBase knowledgeBase) {
             return null;
         }
 
@@ -49,7 +49,7 @@ namespace Wumpus_World {
         }
 
         protected override bool precondition(FOLFact fact) {
-            return fact.Type == PredicateType.PIT && !fact.hasNext();
+            return fact.Type == PredicateType.PIT && !fact.hasNext() && !fact.Not;
         }
 
         public PitQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
@@ -71,7 +71,7 @@ namespace Wumpus_World {
         }
 
         protected override bool precondition(FOLFact fact) {
-            return fact.Type == PredicateType.BREEZE && !fact.hasNext();
+            return fact.Type == PredicateType.BREEZE && !fact.hasNext() && !fact.Not;
         }
 
         public BreezeQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
@@ -97,7 +97,7 @@ namespace Wumpus_World {
         }
 
         protected override bool precondition(FOLFact fact) {
-            return fact.Type == PredicateType.WUMPUS && !fact.hasNext();
+            return fact.Type == PredicateType.WUMPUS && !fact.hasNext() && !fact.Not;
         }
 
         public WumpusQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
@@ -117,7 +117,7 @@ namespace Wumpus_World {
         }
 
         protected override bool precondition(FOLFact fact) {
-            return fact.Type == PredicateType.OBSTACLE && !fact.hasNext();
+            return fact.Type == PredicateType.OBSTACLE && !fact.hasNext() && !fact.Not;
         }
 
         public ObstacleQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }
@@ -142,7 +142,7 @@ namespace Wumpus_World {
         }
 
         protected override bool precondition(FOLFact fact) {
-            return fact.Type == PredicateType.GOLD && !fact.hasNext();
+            return fact.Type == PredicateType.GOLD && !fact.hasNext() && !fact.Not;
         }
 
         public GoldQuantifier(int width, int height, FOLKnowledgeBase knowledgeBase) : base(width, height, knowledgeBase) { }

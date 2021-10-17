@@ -5,11 +5,20 @@ namespace Wumpus_World {
 
         public override void Navigate(Board board) {
             base.Navigate(board);
-            KnowledgeBase = new FOLKnowledgeBase(board.GetSize, board.GetSize);
+
+            FOLKnowledgeBase knowledgeBase = new FOLKnowledgeBase(board.GetSize, board.GetSize);
+
+            while (AliveCheck()) {
+                if(GoldCheck()) break;
+                
+                var modifiers = board.GetModifiers(getCell(board));
+                
+                if(modifiers.isBreeze) knowledgeBase.addPercept(PredicateType.BREEZE, currentX, currentY);
+                if(modifiers.isGlitter) knowledgeBase.addPercept(PredicateType.GLITTER, currentX, currentY);
+                if(modifiers.isSmell) knowledgeBase.addPercept(PredicateType.SMELL, currentX, currentX);
+            }
             
-            board.GetModifiers(getCell(board));
-            
-            
+           
         }
     }
 }

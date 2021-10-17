@@ -7,8 +7,8 @@ namespace Wumpus_World {
     public class Agent {
 
         private Direction facing = Direction.North;
-        private int currentX, currentY;
-        private int previousX, previousY;
+        protected int currentX, currentY;
+        protected int previousX, previousY;
         private int arrowX, arrowY;
         private int arrowCount;
         private int score = 0;

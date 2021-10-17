@@ -89,6 +89,11 @@ namespace Wumpus_World {
                 complexFacts.Enqueue(complexFact);
             }
         }
+        
+        //Valid Check will check to see, based on facts, if a claim is valid or not.
+        public bool validCheck(FOLFact fact) {
+            
+        }
 
         public void ruleQuery() {
             foreach (var rule in rules) {

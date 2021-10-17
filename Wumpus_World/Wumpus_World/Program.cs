@@ -13,9 +13,11 @@ namespace Wumpus_World
             // //driver.RunWumpusWord();
 
             FOLKnowledgeBase knowledgeBase = new FOLKnowledgeBase(5, 5);
-            knowledgeBase.addPercept(PredicateType.EMPTY, 1, 1);
+            knowledgeBase.addPercept(PredicateType.BREEZE, 0, 1);
+            knowledgeBase.addPercept(PredicateType.SAFE, 1, 1);
+            knowledgeBase.addPercept(PredicateType.SAFE, 0, 2);
             knowledgeBase.infer();
-            
+
             Console.WriteLine(knowledgeBase);
         }
     }
