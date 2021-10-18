@@ -4,7 +4,7 @@
     <Files>
       <File FileName="Wumpus_World/Statistics.cs" Line="30" Column="1" />
       <File FileName="Wumpus_World/Agent.cs" />
-      <File FileName="Wumpus_World/ReflexAgent.cs" Line="235" Column="46" />
+      <File FileName="Wumpus_World/ReflexAgent.cs" Line="500" Column="26" />
       <File FileName="Wumpus_World/Program.cs" />
       <File FileName="Wumpus_World/Driver.cs" />
       <File FileName="Wumpus_World/Board.cs" />

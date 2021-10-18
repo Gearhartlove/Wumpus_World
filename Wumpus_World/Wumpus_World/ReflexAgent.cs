@@ -14,10 +14,10 @@ namespace Wumpus_World
         bool isDead = false;
         bool agentJustSpawned = true;
 
-        // Variable which determines when the agent desparately needs to find the gold
-        bool isDesparate = false;
-        // Variable to determine how desparate the agent is
-        int desparateLevel = 0;
+        // Variable which determines when the agent desperately needs to find the gold
+        bool isDesperate = false;
+        // Variable to determine how desperate the agent is
+        int desperateLevel = 0;
 
         // Variable to hold the number of arrows the agent has
         int numArrows;
@@ -149,13 +149,13 @@ namespace Wumpus_World
                     stats.IncrementStat('A');
                     lastCellDirection = Direction.South;
                 }
-                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesperate)
                 {
                     MoveBack();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
                 }
-                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesperate)
                 {
                     MoveNorth();
                     UpdateCurrentCell();
@@ -180,13 +180,13 @@ namespace Wumpus_World
                     stats.IncrementStat('A');
                     lastCellDirection = Direction.West;
                 }
-                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesperate)
                 {
                     MoveBack();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
                 }
-                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesperate)
                 {
                     MoveEast();
                     UpdateCurrentCell();
@@ -211,13 +211,13 @@ namespace Wumpus_World
                     stats.IncrementStat('A');
                     lastCellDirection = Direction.North;
                 }
-                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesperate)
                 {
                     MoveBack();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
                 }
-                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesperate)
                 {
                     MoveSouth();
                     UpdateCurrentCell();
@@ -242,13 +242,13 @@ namespace Wumpus_World
                     stats.IncrementStat('A');
                     lastCellDirection = Direction.East;
                 }
-                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesperate)
                 {
                     MoveBack();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
                 }
-                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
+                else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesperate)
                 {
                     MoveWest();
                     UpdateCurrentCell();
@@ -434,9 +434,9 @@ namespace Wumpus_World
         /// </summary>
         void MoveBack()
         {
-            if (desparateLevel >= 5)
-                isDesparate = true;
-            desparateLevel++;
+            if (desperateLevel >= 5)
+                isDesperate = true;
+            desperateLevel++;
 
             if (lastCellDirection == Direction.North)
             {
