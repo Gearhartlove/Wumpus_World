@@ -340,7 +340,10 @@ namespace Wumpus_World {
         /// <param name="goalCell"></param>
         /// <returns></returns>
         public void TravelPath(Cell goalCell) {
-            if (goalCell.getX == currentX && goalCell.getY == currentY) return;
+            if (goalCell.getX == currentX && goalCell.getY == currentY) {
+                Console.WriteLine(board);
+                return;
+            }
             Stack<Cell> path = CalculatePath(goalCell);
             path.Pop();
             // travel the path

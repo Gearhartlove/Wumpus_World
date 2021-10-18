@@ -6,25 +6,24 @@ namespace Wumpus_World {
     public class FOLAgent : Agent {
 
         List<CellLocation> placesToGo = new List<CellLocation>();
-        private FOLKnowledgeBase knowledgeBase;
+        protected FOLKnowledgeBase knowledgeBase;
         
-        private Random rng = new Random(); 
-
-        private int lastX = -1, lastY = -1;
-        private int lastTargetX = -1, lastTargetY = -1;
+        private Random rng = new Random();
         
         public override void Navigate(Board board) {
             board.SetAgent(this);
             Console.WriteLine(board);
 
             knowledgeBase = new FOLKnowledgeBase(board.GetSize, board.GetSize);
-            placesToGo.Add(new CellLocation(knowledgeBase, currentX, currentY));
-
+            routeAdjacent(board);
+            
             while (AliveCheck()) {
                 if(GoldCheck()) break;
 
                 //Perceve and make decision
                 var modifiers = board.GetModifiers(getCell(board));
+                
+                knowledgeBase.addPercept(PredicateType.SAFE, currentX, currentY);
                 
                 if(modifiers.isBreeze) knowledgeBase.addPercept(PredicateType.BREEZE, currentX, currentY);
                 if(modifiers.isGlitter) knowledgeBase.addPercept(PredicateType.GLITTER, currentX, currentY);
@@ -32,12 +31,9 @@ namespace Wumpus_World {
                 if(!modifiers.isBreeze && !modifiers.isGlitter && !modifiers.isSmell)
                     knowledgeBase.addPercept(PredicateType.EMPTY, currentX, currentY);
 
-                if(currentX == lastX && currentY == lastY) 
-                    knowledgeBase.addPercept(PredicateType.OBSTACLE, lastTargetX, lastTargetY);
-                
                 knowledgeBase.infer();
-                Console.WriteLine(knowledgeBase.simpleFactsString());
-                Console.WriteLine(knowledgeBase.complexFactsString());
+                Console.WriteLine("Simple Facts | " + knowledgeBase.simpleFactsString() + "\n");
+                Console.WriteLine("Complex Facts | " + knowledgeBase.complexFactsString() + "\n");
 
                 placesToGo.RemoveAll(i => !i.calcScore(currentX, currentY));
 
@@ -57,28 +53,31 @@ namespace Wumpus_World {
 
                 } 
                 
-                Console.WriteLine("Oder of cells: " + string.Join(", ", placesToGo));
+                Console.WriteLine("Oder of cells: " + string.Join(", ", placesToGo) + "\n");
 
                 var target = placesToGo.First();
                 placesToGo.RemoveAt(0);
                 
                 Console.WriteLine(target);
-                lastX = currentX;
-                lastY = currentY;
                 TravelPath(board[target.X, target.Y]);
-                
-                if(currentX + 1 >= 0 && currentX + 1 < board.GetSize && currentY >= 0 && currentY < board.GetSize && !QueryVisited(board[currentX + 1, currentY])) 
-                    addPlace(new CellLocation(knowledgeBase, currentX + 1, currentY));
-                if(currentX - 1 >= 0 && currentX - 1 < board.GetSize && currentY >= 0 && currentY < board.GetSize && !QueryVisited(board[currentX - 1, currentY])) 
-                    addPlace(new CellLocation(knowledgeBase, currentX - 1, currentY)); 
-                if(currentX >= 0 && currentX < board.GetSize && currentY + 1 >= 0 && currentY + 1 < board.GetSize && !QueryVisited(board[currentX, currentY + 1])) 
-                    addPlace(new CellLocation(knowledgeBase, currentX, currentY + 1)); 
-                if(currentX >= 0 && currentX < board.GetSize && currentY - 1 >= 0 && currentY - 1 < board.GetSize && !QueryVisited(board[currentX, currentY - 1])) 
-                    addPlace(new CellLocation(knowledgeBase, currentX, currentY - 1));
 
-                lastTargetX = target.X;
-                lastTargetY = target.Y;
+                if (currentX == previousX && currentY == previousY) {
+                    knowledgeBase.addPercept(PredicateType.OBSTACLE, target.X, target.Y);
+                } else {
+                    routeAdjacent(board);
+                }
             }
+        }
+
+        private void routeAdjacent(Board board) {
+            if(currentX + 1 >= 0 && currentX + 1 < board.GetSize && currentY >= 0 && currentY < board.GetSize && !QueryVisited(board[currentX + 1, currentY])) 
+                addPlace(new CellLocation(knowledgeBase, currentX + 1, currentY));
+            if(currentX - 1 >= 0 && currentX - 1 < board.GetSize && currentY >= 0 && currentY < board.GetSize && !QueryVisited(board[currentX - 1, currentY])) 
+                addPlace(new CellLocation(knowledgeBase, currentX - 1, currentY)); 
+            if(currentX >= 0 && currentX < board.GetSize && currentY + 1 >= 0 && currentY + 1 < board.GetSize && !QueryVisited(board[currentX, currentY + 1])) 
+                addPlace(new CellLocation(knowledgeBase, currentX, currentY + 1)); 
+            if(currentX >= 0 && currentX < board.GetSize && currentY - 1 >= 0 && currentY - 1 < board.GetSize && !QueryVisited(board[currentX, currentY - 1])) 
+                addPlace(new CellLocation(knowledgeBase, currentX, currentY - 1));
         }
 
         private void addPlace(CellLocation location) {
@@ -98,10 +97,12 @@ namespace Wumpus_World {
     }
 
     class CellLocation {
-        const int POINTS_FOR_WUMPUS = -200;
-        const int POINTS_FOR_PIT = -200;
+        const int POINTS_FOR_WUMPUS = -1000;
+        const int POINTS_FOR_PIT = -1000;
         const int POINTS_FOR_SAFE = 200;
         const int POINTS_FOR_SUSPECT_GOLD = 300;
+        const int POINTS_FOR_SUSPECT_PIT = -300;
+        const int POINTS_FOR_SUSPECT_WUMPUS = -300;
 
         private FOLKnowledgeBase knowledgeBase;
         private int x, y, score;
@@ -121,13 +122,15 @@ namespace Wumpus_World {
             var pit = knowledgeBase.queryFact(PredicateType.PIT, x, y);
             var distance = Math.Abs(currentX - x) + Math.Abs(currentY - y);
             var suspectGold = knowledgeBase.isSuspected(PredicateType.GOLD, x, y);
+            var suspectWumpus = knowledgeBase.isSuspected(PredicateType.WUMPUS, x, y);
+            var suspectPit = knowledgeBase.isSuspected(PredicateType.PIT, x, y);
 
             if (gold == KnowledgeQuery.TRUE) {
                 score = Int32.MaxValue;
                 return true;
             }
 
-            if (movable == KnowledgeQuery.TRUE) {
+            if (movable == KnowledgeQuery.FALSE) {
                 score = Int32.MinValue;
                 return false;
             }
@@ -136,6 +139,8 @@ namespace Wumpus_World {
             if (wumpus == KnowledgeQuery.TRUE) score += POINTS_FOR_WUMPUS;
             if (safe == KnowledgeQuery.TRUE) score += POINTS_FOR_SAFE;
             if (suspectGold) score += POINTS_FOR_SUSPECT_GOLD;
+            if (suspectWumpus) score += POINTS_FOR_SUSPECT_WUMPUS;
+            if (suspectPit) score += POINTS_FOR_SUSPECT_PIT;
             score -= distance;
 
             return true;
