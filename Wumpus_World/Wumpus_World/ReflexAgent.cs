@@ -341,10 +341,13 @@ namespace Wumpus_World
                                 else
                                 {
                                     Console.WriteLine(board.ToString());
-                                    MoveBack();
-                                    UpdateCurrentCell();
-                                    stats.IncrementStat('A');
-                                    Console.WriteLine(board.ToString());
+                                    if (!isDead)
+                                    {
+                                        MoveBack();
+                                        UpdateCurrentCell();
+                                        stats.IncrementStat('A');
+                                        Console.WriteLine(board.ToString());
+                                    }
                                 }
                             }
                             break;
@@ -361,10 +364,13 @@ namespace Wumpus_World
                                 else
                                 {
                                     Console.WriteLine(board.ToString());
-                                    MoveBack();
-                                    UpdateCurrentCell();
-                                    stats.IncrementStat('A');
-                                    Console.WriteLine(board.ToString());
+                                    if (!isDead)
+                                    {
+                                        MoveBack();
+                                        UpdateCurrentCell();
+                                        stats.IncrementStat('A');
+                                        Console.WriteLine(board.ToString());
+                                    }
                                 }
                             }
                             break;
@@ -381,10 +387,13 @@ namespace Wumpus_World
                                 else
                                 {
                                     Console.WriteLine(board.ToString());
-                                    MoveBack();
-                                    UpdateCurrentCell();
-                                    stats.IncrementStat('A');
-                                    Console.WriteLine(board.ToString());
+                                    if (!isDead)
+                                    {
+                                        MoveBack();
+                                        UpdateCurrentCell();
+                                        stats.IncrementStat('A');
+                                        Console.WriteLine(board.ToString());
+                                    }
                                 }
                             }
                             break;
@@ -401,10 +410,13 @@ namespace Wumpus_World
                                 else
                                 {
                                     Console.WriteLine(board.ToString());
-                                    MoveBack();
-                                    UpdateCurrentCell();
-                                    stats.IncrementStat('A');
-                                    Console.WriteLine(board.ToString());
+                                    if (!isDead)
+                                    {
+                                        MoveBack();
+                                        UpdateCurrentCell();
+                                        stats.IncrementStat('A');
+                                        Console.WriteLine(board.ToString());
+                                    }
                                 }
                             }
                             break;
@@ -487,22 +499,24 @@ namespace Wumpus_World
         /// </summary>
         void DeathCheck()
         {
-            // If the current cell is a Wumpus:
-            // The agent dies
-            if (currentCell.GetState() == State.Wumpus)
-            {
-                isDead = true;
-                stats.IncrementStat('D');
-                stats.IncrementStat('W');
-            }
+            if (!isDead)
+            {// If the current cell is a Wumpus:
+             // The agent dies
+                if (currentCell.GetState() == State.Wumpus)
+                {
+                    isDead = true;
+                    stats.IncrementStat('D');
+                    stats.IncrementStat('W');
+                }
 
-            // If the current cell is a pit:
-            // The agent dies
-            if (currentCell.GetState() == State.Pit)
-            {
-                isDead = true;
-                stats.IncrementStat('D');
-                stats.IncrementStat('P');
+                // If the current cell is a pit:
+                // The agent dies
+                if (currentCell.GetState() == State.Pit)
+                {
+                    isDead = true;
+                    stats.IncrementStat('D');
+                    stats.IncrementStat('P');
+                }
             }
         }
     }
