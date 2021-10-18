@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "D:\\krist\\github\\Wumpus_World\\Wumpus_World\\Wumpus_World\\Wumpus_World.csproj": {}
+    "/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj": {}
   },
   "projects": {
-    "D:\\krist\\github\\Wumpus_World\\Wumpus_World\\Wumpus_World\\Wumpus_World.csproj": {
+    "/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\krist\\github\\Wumpus_World\\Wumpus_World\\Wumpus_World\\Wumpus_World.csproj",
+        "projectUniqueName": "/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj",
         "projectName": "Wumpus_World",
-        "projectPath": "D:\\krist\\github\\Wumpus_World\\Wumpus_World\\Wumpus_World\\Wumpus_World.csproj",
-        "packagesPath": "C:\\Users\\krist\\.nuget\\packages\\",
-        "outputPath": "D:\\krist\\github\\Wumpus_World\\Wumpus_World\\Wumpus_World\\obj\\",
+        "projectPath": "/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/Wumpus_World.csproj",
+        "packagesPath": "/Users/gearhart/.nuget/packages/",
+        "outputPath": "/Users/gearhart/Documents/Github/Wumpus_World/Wumpus_World/Wumpus_World/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\krist\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/gearhart/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -54,7 +52,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/5.0.400/RuntimeIdentifierGraph.json"
         }
       }
     }

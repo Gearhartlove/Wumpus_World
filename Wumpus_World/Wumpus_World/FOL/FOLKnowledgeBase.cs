@@ -98,7 +98,6 @@ namespace Wumpus_World {
                     if (allFalse) {
                         var f = unknowns.First();
                         if (!cantBeOverriden(f.Type, f.X, f.Y)) {
-                            Console.WriteLine("Fact Inferred! " + unknowns.First());
                             addFacts(unknowns.First());
                         }
                         continue;

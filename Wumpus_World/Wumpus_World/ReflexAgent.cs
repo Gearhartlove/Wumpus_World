@@ -51,14 +51,11 @@ namespace Wumpus_World
             UpdateCurrentCell();
 
             // Sets the number of arrows equal to the number of Wumpus'
-            numArrows = GetArrowCount();
+            numArrows = GetArrowCount;
 
             // Assigning X and Y values of the current cell
             cellX = currentCell.getX;
             cellY = currentCell.getY;
-
-            // Print the initial state of the board
-            Console.WriteLine(_board.ToString());
 
             // Life of the agent: stops it from going on forever
             int life = 50;
@@ -68,9 +65,6 @@ namespace Wumpus_World
             {
                 // Runs a reflex move method which moves the agent
                 ReflexMove();
-
-                // Print the current state of the board
-                Console.WriteLine(_board.ToString());
 
                 // Gets the current cell the agent is in
                 UpdateCurrentCell();
@@ -85,11 +79,8 @@ namespace Wumpus_World
                     isSolved = true;
                     stats.IncrementStat('G');
                 }
-
                 life--;
             }
-            // Print stats after death or victory
-            stats.PrintStats();
         }
 
         /// <summary>
@@ -340,11 +331,9 @@ namespace Wumpus_World
                                     inGoldCell = true;
                                 else
                                 {
-                                    Console.WriteLine(board.ToString());
                                     MoveBack();
                                     UpdateCurrentCell();
                                     stats.IncrementStat('A');
-                                    Console.WriteLine(board.ToString());
                                 }
                             }
                             break;
@@ -360,11 +349,9 @@ namespace Wumpus_World
                                     inGoldCell = true;
                                 else
                                 {
-                                    Console.WriteLine(board.ToString());
                                     MoveBack();
                                     UpdateCurrentCell();
                                     stats.IncrementStat('A');
-                                    Console.WriteLine(board.ToString());
                                 }
                             }
                             break;
@@ -380,11 +367,9 @@ namespace Wumpus_World
                                     inGoldCell = true;
                                 else
                                 {
-                                    Console.WriteLine(board.ToString());
                                     MoveBack();
                                     UpdateCurrentCell();
                                     stats.IncrementStat('A');
-                                    Console.WriteLine(board.ToString());
                                 }
                             }
                             break;
@@ -400,11 +385,9 @@ namespace Wumpus_World
                                     inGoldCell = true;
                                 else
                                 {
-                                    Console.WriteLine(board.ToString());
                                     MoveBack();
                                     UpdateCurrentCell();
                                     stats.IncrementStat('A');
-                                    Console.WriteLine(board.ToString());
                                 }
                             }
                             break;

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Wumpus_World
-{
+namespace Wumpus_World {
     public class Statistics
     {
         // Stats to be tracked
-        Dictionary<char, int> agentStats = new Dictionary<char, int>()
+        public Dictionary<char, double> agentStats = new Dictionary<char, double>()
         {
             {'A', 0},
             {'G', 0},
@@ -29,6 +28,9 @@ namespace Wumpus_World
             agentStats[_key]++;
         }
 
+        public void AddToStat(char key, double val) {
+            this.agentStats[key] += val;
+        }
         /// <summary>
         /// Quickly add the correct score when slaying a Wumpus
         /// </summary>
@@ -58,7 +60,7 @@ namespace Wumpus_World
         /// </summary>
         /// <param name="_key"></param>
         /// <returns></returns>
-        public int GetStat(char _key)
+        public double GetStat(char _key)
         {
             return agentStats[_key];
         }
@@ -80,12 +82,14 @@ namespace Wumpus_World
         /// <summary>
         /// Prints all statistics to the console
         /// </summary>
-        public void PrintStats()
+        public void PrintStats(Board board)
         {
+            Console.WriteLine("Averages for Board Size: " +  board.GetSize + "x" + board.GetSize);
             Console.WriteLine("Actions taken: " + agentStats['A'] + "\nGolds found: "
                 + agentStats['G'] + "\nWumpus' killed: " + agentStats['K'] + "\nDeaths to Wumpus: "
                 + agentStats['W'] + "\nTotal deaths: " + agentStats['D'] + "\nDeaths to pit: "
                 + agentStats['P'] + "\nCells explored: " + agentStats['E']);
+            Console.WriteLine("-----------------------------------------------------------------------------------");
         }
     }
 }

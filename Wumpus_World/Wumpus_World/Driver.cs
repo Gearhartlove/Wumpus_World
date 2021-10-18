@@ -5,6 +5,7 @@ namespace Wumpus_World {
         // References of agents used throughout the program
         private FOLAgent foa;
         private ReflexAgent ra;
+        private const int iterations = 10;
         
         /// <summary>
         /// Constructor for Driver class. Main brings in the two agents as parameters.
@@ -31,13 +32,20 @@ namespace Wumpus_World {
         public void RunWumpusWord() {
             for (int boardSize = 1; boardSize <= 5; boardSize++) {
                 int size = boardSize * 5; 
-                for (int boardNum = 1; boardNum <= 10; boardNum++) {
+                for (int boardNum = 1; boardNum <= iterations; boardNum++) {
                     Board board = new Board(size);
                     foa.SetBoard(board);
                     ra.SetBoard(board);
                     foa.Navigate(board);
                     ra.Navigate(board);
                 }
+                
+                // print out the averages of stats
+                //ra.PrintAverage();
+                //foa.PrintAverage();
+                // clear the stats for next loop
+                ra.ClearAverage();
+                foa.ClearAverage();
             }
         }
     }

@@ -12,7 +12,6 @@ namespace Wumpus_World {
         
         public override void Navigate(Board board) {
             board.SetAgent(this);
-            Console.WriteLine(board);
 
             knowledgeBase = new FOLKnowledgeBase(board.GetSize, board.GetSize);
             routeAdjacent(board);
@@ -32,8 +31,6 @@ namespace Wumpus_World {
                     knowledgeBase.addPercept(PredicateType.EMPTY, currentX, currentY);
 
                 knowledgeBase.infer();
-                Console.WriteLine("Simple Facts | " + knowledgeBase.simpleFactsString() + "\n");
-                Console.WriteLine("Complex Facts | " + knowledgeBase.complexFactsString() + "\n");
 
                 placesToGo.RemoveAll(i => !i.calcScore(currentX, currentY));
 
@@ -53,12 +50,10 @@ namespace Wumpus_World {
 
                 } 
                 
-                Console.WriteLine("Oder of cells: " + string.Join(", ", placesToGo) + "\n");
 
                 var target = placesToGo.First();
                 placesToGo.RemoveAt(0);
                 
-                Console.WriteLine(target);
                 TravelPath(board[target.X, target.Y]);
 
                 if (currentX == previousX && currentY == previousY) {
