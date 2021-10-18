@@ -4,11 +4,11 @@
     <Files>
       <File FileName="Wumpus_World/Statistics.cs" Line="30" Column="1" />
       <File FileName="Wumpus_World/Agent.cs" Line="102" Column="1" />
-      <File FileName="Wumpus_World/ReflexAgent.cs" Line="73" Column="1" />
+      <File FileName="Wumpus_World/ReflexAgent.cs" />
       <File FileName="Wumpus_World/Program.cs" />
       <File FileName="Wumpus_World/Driver.cs" />
-      <File FileName="Wumpus_World/Board.cs" Line="23" Column="1" />
-      <File FileName="Wumpus_World/Cell.cs" Line="31" Column="1" />
+      <File FileName="Wumpus_World/Board.cs" />
+      <File FileName="Wumpus_World/Cell.cs" />
       <File FileName="Wumpus_World/Modifier.cs" />
     </Files>
     <Pads>

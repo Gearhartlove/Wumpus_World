@@ -97,8 +97,6 @@ namespace Wumpus_World
         /// </summary>
         void ReflexMove()
         {
-            // Variable to track direction while shooting
-            int forDirection = 0;
             // Variable to determine when to take risks that could lead to vicotry
             bool willTakeRisks = false;
             // Variable to determine when the agent will avoid pits
@@ -139,37 +137,6 @@ namespace Wumpus_World
             {
                 if (agentJustSpawned)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.North;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveNorth();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
@@ -184,74 +151,12 @@ namespace Wumpus_World
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.North;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveBack();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.North;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveNorth();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
@@ -263,37 +168,6 @@ namespace Wumpus_World
             {
                 if (agentJustSpawned)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.East;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveEast();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
@@ -308,74 +182,12 @@ namespace Wumpus_World
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.East;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveBack();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.East;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveEast();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
@@ -387,37 +199,6 @@ namespace Wumpus_World
             {
                 if (agentJustSpawned)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.South;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveSouth();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
@@ -432,74 +213,12 @@ namespace Wumpus_World
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.South;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveBack();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.South;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveSouth();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
@@ -511,37 +230,6 @@ namespace Wumpus_World
             {
                 if (agentJustSpawned)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.West;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveWest();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
@@ -556,74 +244,12 @@ namespace Wumpus_World
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.West;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveBack();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
                 {
-                    for (int i = 4; i > 0; i--)
-                    {
-                        if (numArrows > 0 && willAvoidWumpus)
-                        {
-                            Shoot();
-                            turnRight();
-                            forDirection++;
-                            numArrows--;
-                        }
-                        switch (forDirection)
-                        {
-                            case 0:
-                                lastCellDirection = Direction.West;
-                                break;
-                            case 1:
-                                lastCellDirection = Direction.North;
-                                break;
-                            case 2:
-                                lastCellDirection = Direction.East;
-                                break;
-                            case 3:
-                                lastCellDirection = Direction.South;
-                                break;
-                            case 4:
-                                lastCellDirection = Direction.West;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    forDirection = 0;
                     MoveWest();
                     UpdateCurrentCell();
                     stats.IncrementStat('A');
