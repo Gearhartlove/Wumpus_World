@@ -50,18 +50,18 @@ namespace Wumpus_World {
 
                 } 
                 
-
                 var target = placesToGo.First();
                 placesToGo.RemoveAt(0);
                 
                 TravelPath(board[target.X, target.Y]);
 
-                if (currentX == previousX && currentY == previousY) {
+                if (currentX == prevX && currentY == prevY) {
                     knowledgeBase.addPercept(PredicateType.OBSTACLE, target.X, target.Y);
                 } else {
                     routeAdjacent(board);
                 }
             }
+            AppendStatsList(stats);
         }
 
         private void routeAdjacent(Board board) {

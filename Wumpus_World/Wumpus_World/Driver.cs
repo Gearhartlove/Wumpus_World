@@ -32,19 +32,20 @@ namespace Wumpus_World {
         public void RunWumpusWord() {
             for (int boardSize = 1; boardSize <= 5; boardSize++) {
                 int size = boardSize * 5; 
+                // Collecting statistics
                 for (int boardNum = 1; boardNum <= iterations; boardNum++) {
                     Board board = new Board(size);
                     foa.SetBoard(board);
-                    ra.SetBoard(board);
+                    //ra.SetBoard(board);
                     foa.Navigate(board);
-                    ra.Navigate(board);
+                    //ra.Navigate(board);
                 }
                 
                 // print out the averages of stats
                 //ra.PrintAverage();
-                //foa.PrintAverage();
+                foa.PrintAverage();
                 // clear the stats for next loop
-                ra.ClearAverage();
+                //ra.ClearAverage();
                 foa.ClearAverage();
             }
         }

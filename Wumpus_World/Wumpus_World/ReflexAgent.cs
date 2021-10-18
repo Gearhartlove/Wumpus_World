@@ -81,6 +81,7 @@ namespace Wumpus_World
                 }
                 life--;
             }
+            AppendStatsList(stats);
         }
 
         /// <summary>

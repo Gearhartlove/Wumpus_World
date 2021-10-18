@@ -90,6 +90,7 @@ namespace Wumpus_World {
                 + agentStats['W'] + "\nTotal deaths: " + agentStats['D'] + "\nDeaths to pit: "
                 + agentStats['P'] + "\nCells explored: " + agentStats['E']);
             Console.WriteLine("-----------------------------------------------------------------------------------");
+            Console.WriteLine();
         }
     }
 }

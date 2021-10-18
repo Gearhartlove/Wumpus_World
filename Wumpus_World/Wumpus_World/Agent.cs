@@ -7,7 +7,7 @@ namespace Wumpus_World {
 
         private Direction facing = Direction.North;
         protected int currentX, currentY;
-        protected int previousX, previousY;
+        protected int prevX, prevY;
         private int arrowX, arrowY;
         private int arrowCount;
         protected int GetArrowCount => arrowCount;
@@ -141,8 +141,8 @@ namespace Wumpus_World {
         /// </summary>
         /// <returns></returns>
         protected State walkForward() {
-            int prevX = currentX;
-            int prevY = currentY;
+            prevX = currentX;
+            prevY = currentY;
             
             switch (facing) {
                 case Direction.North:
@@ -392,7 +392,8 @@ namespace Wumpus_World {
                 // calculate distance. 
                 foreach (Cell c in board.CellNeighbors(returnCells.Peek())) {
                     // if c is not avoided and visited, proceed
-                    if (!avoidCells.Contains(c) && QueryVisited(c) && !returnCells.Contains(c)) {
+                    if (!avoidCells.Contains(c) && QueryVisited(c) && !returnCells.Contains(c)
+                        && c.GetState() != State.Obstacle) {
                         distance.Add(c, CalcDistance(goalCell, c));
                     }
                 }
@@ -401,7 +402,6 @@ namespace Wumpus_World {
                 if (distance.Count > 0) {
                     // get smallest distance
                     double min = distance.Min(x => x.Value);
-                    // TODO Check if this loss of precision gives me a bug
                     Cell leaf = distance.FirstOrDefault(x => x.Value.Equals(min)).Key;
                     returnCells.Push(leaf);
                 }
@@ -423,7 +423,7 @@ namespace Wumpus_World {
         /// Append stats to the stats list.
         /// </summary>
         /// <param name="stat"></param>
-        private void AppendStatsList(Statistics stat) {
+        protected void AppendStatsList(Statistics stat) {
             statsList.Add(stat);
         }
 
@@ -445,11 +445,11 @@ namespace Wumpus_World {
             }
             
             // divide stats by 10
-            foreach (var key in averageStats.agentStats.Keys.ToList()) {
-                averageStats.agentStats[key] = averageStats.agentStats[key] / 10.0; //10 boards per run
-            }
+            // foreach (var key in averageStats.agentStats.Keys.ToList()) {
+            //     averageStats.agentStats[key] = averageStats.agentStats[key] / 10.0; //10 boards per run
+            // }
             // print out the stats
-            Console.WriteLine(averageStats);
+            averageStats.PrintStats(board);
         }
 
         /// <summary>
