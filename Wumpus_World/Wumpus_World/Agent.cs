@@ -7,7 +7,7 @@ namespace Wumpus_World {
 
         private Direction facing = Direction.North;
         protected int currentX, currentY;
-        protected int previousX, previousY;
+        protected int prevX, prevY;
         private int arrowX, arrowY;
         private int arrowCount;
         private int score = 0;
@@ -135,8 +135,8 @@ namespace Wumpus_World {
         /// </summary>
         /// <returns></returns>
         protected State walkForward() {
-            int prevX = currentX;
-            int prevY = currentY;
+            prevX = currentX;
+            prevY = currentY;
             
             switch (facing) {
                 case Direction.North:
@@ -379,7 +379,8 @@ namespace Wumpus_World {
                 // calculate distance. 
                 foreach (Cell c in board.CellNeighbors(returnCells.Peek())) {
                     // if c is not avoided and visited, proceed
-                    if (!avoidCells.Contains(c) && QueryVisited(c) && !returnCells.Contains(c)) {
+                    if (!avoidCells.Contains(c) && QueryVisited(c) && !returnCells.Contains(c) 
+                        && c.GetState() != State.Obstacle) {
                         distance.Add(c, CalcDistance(goalCell, c));
                     }
                 }

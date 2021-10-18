@@ -61,7 +61,7 @@ namespace Wumpus_World {
                 Console.WriteLine(target);
                 TravelPath(board[target.X, target.Y]);
 
-                if (currentX == previousX && currentY == previousY) {
+                if (currentX == prevX && currentY == prevY) {
                     knowledgeBase.addPercept(PredicateType.OBSTACLE, target.X, target.Y);
                 } else {
                     routeAdjacent(board);
