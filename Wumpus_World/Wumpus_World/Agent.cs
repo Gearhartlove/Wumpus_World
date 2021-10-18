@@ -10,6 +10,7 @@ namespace Wumpus_World {
         protected int previousX, previousY;
         private int arrowX, arrowY;
         private int arrowCount;
+        protected Statistics stats;
         private int score = 0;
         private Board board;
         private Dictionary<Tuple<int,int>, bool> cellsVisited = new Dictionary<Tuple<int, int>, bool>();

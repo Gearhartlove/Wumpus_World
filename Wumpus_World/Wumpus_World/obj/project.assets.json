@@ -1,35 +1,38 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v5.0": {}
+    "net5.0": {}
   },
   "libraries": {},
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v5.0": []
+    "net5.0": []
   },
   "packageFolders": {
-    "C:\\Users\\aweso\\.nuget\\packages\\": {}
+    "C:\\Users\\krist\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\aweso\\Desktop\\Projects\\Wumpus_World\\Wumpus_World\\Wumpus_World\\Wumpus_World.csproj",
+      "projectUniqueName": "D:\\krist\\github\\Wumpus_World\\Wumpus_World\\Wumpus_World\\Wumpus_World.csproj",
       "projectName": "Wumpus_World",
-      "projectPath": "C:\\Users\\aweso\\Desktop\\Projects\\Wumpus_World\\Wumpus_World\\Wumpus_World\\Wumpus_World.csproj",
-      "packagesPath": "C:\\Users\\aweso\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\aweso\\Desktop\\Projects\\Wumpus_World\\Wumpus_World\\Wumpus_World\\obj\\",
+      "projectPath": "D:\\krist\\github\\Wumpus_World\\Wumpus_World\\Wumpus_World\\Wumpus_World.csproj",
+      "packagesPath": "C:\\Users\\krist\\.nuget\\packages\\",
+      "outputPath": "D:\\krist\\github\\Wumpus_World\\Wumpus_World\\Wumpus_World\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\aweso\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\krist\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
-        "net50"
+        "net5.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "netcoreapp5.0": {
+        "net5.0": {
+          "targetAlias": "net5.0",
           "projectReferences": {}
         }
       },
@@ -40,7 +43,8 @@
       }
     },
     "frameworks": {
-      "netcoreapp5.0": {
+      "net5.0": {
+        "targetAlias": "net5.0",
         "imports": [
           "net461",
           "net462",
@@ -50,7 +54,13 @@
           "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.400\\RuntimeIdentifierGraph.json"
       }
     }
   }
