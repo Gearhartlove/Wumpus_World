@@ -52,8 +52,8 @@ namespace Wumpus_World {
     }
     
     /// <summary>
-    /// Quantifier 1: Keep your eye down and your finger in the air.
-    /// ∀ x,y PIT(x,y) => -SAFE(x,y) ∧ BREEZE(x +=- 1, y +=- 1) 
+    /// Quantifier 2: Is there a draft in here?
+    /// ∀ x,y BREEZE(x,y) => WUMPUS(x+-1, y+-1) v 
     /// </summary>
     public class BreezeQuantifier : FOLRule {
         protected override FOLFact eval(int x, int y) {
@@ -74,7 +74,7 @@ namespace Wumpus_World {
     }
 
     /// <summary>
-    /// Quantifier 2: The wumpus lurks...
+    /// Quantifier 3: The wumpus lurks...
     /// ∀ x,y WUMPUS(x,y) => -SAFE(x,y) ∧ SMELL(x +=- 1, y +=- 1) 
     /// </summary>
     public class WumpusQuantifier : FOLRule {
@@ -100,7 +100,7 @@ namespace Wumpus_World {
     }
     
     /// <summary>
-    /// Quantifier 3 : Walls don't budge.
+    /// Quantifier 4: Walls don't budge.
     /// ∀ x,y OBSTACLE(x,y) => -MOVABLE(x,y)
     /// </summary>
     public class ObstacleQuantifier : FOLRule {
@@ -120,7 +120,7 @@ namespace Wumpus_World {
     }
     
     /// <summary>
-    /// Quantifier 4: X marks the spot.
+    /// Quantifier 5: X marks the spot.
     /// ∀ x,y GOLD(x,y) => SAFE(x,y) ∧ GLITTER(x+=-1, y+=-1) ∧ -OTHER(x, y)
     /// </summary>
     public class GoldQuantifier : FOLRule {
@@ -145,7 +145,7 @@ namespace Wumpus_World {
     }
 
     /// <summary>
-    /// Quantifier 5: Where there is a smell, there is a Wumpus.
+    /// Quantifier 6: Where there is a smell, there is a Wumpus.
     /// ∀ x,y SMELL(x,y) => WUMPUS(x+-1, y+-1) v 
     /// </summary>
     public class StenchQuantifier : FOLRule {
@@ -165,7 +165,7 @@ namespace Wumpus_World {
     }
 
     /// <summary>
-    /// Quantifier 6: Keep your eyes on the prize.
+    /// Quantifier 7: Keep your eyes on the prize.
     /// ∀ x,y GLITTER(x,y) => GOLD(x+-1, y+-1) v 
     /// </summary>
     public class GlitterQuantifier : FOLRule {
@@ -185,7 +185,7 @@ namespace Wumpus_World {
     }
 
     /// <summary>
-    /// Quantifier 7: Safety is where the scary things aren't.
+    /// Quantifier 8: Safety is where the scary things aren't.
     /// ∀ x,y GLITTER(x,y) => GOLD(x+-1, y+-1) v 
     /// </summary>
     public class SafeQuantifier : FOLRule {
@@ -205,8 +205,8 @@ namespace Wumpus_World {
     }
     
     /// <summary>
-    /// Quantifier 7: Safety is where the scary things aren't.
-    /// ∀ x,y GLITTER(x,y) => GOLD(x+-1, y+-1) v 
+    /// Quantifier 9: Hear no Evil, See no Evil, Say no Evil
+    /// ∀ x,y EMPTY(x,y) => -PIT(x+-1, y+-1) v -WUMPUS(x+-1, y+-1) v -GOLD(x+-1, y+-1) v SAFE(x+=-1, y+=-1)
     /// </summary>
     public class EmptyQualifier : FOLRule {
         protected override FOLFact eval(int x, int y) {
@@ -216,19 +216,15 @@ namespace Wumpus_World {
                .and(PredicateType.SAFE, x, y - 1)
                .and(PredicateType.GOLD, x + 1, y).isNegative()
                .and(PredicateType.WUMPUS, x + 1, y).isNegative()
-               .and(PredicateType.OBSTACLE, x + 1, y).isNegative()
                .and(PredicateType.PIT, x + 1, y).isNegative()
                .and(PredicateType.GOLD, x-1, y).isNegative()
                .and(PredicateType.WUMPUS, x-1, y).isNegative()
-               .and(PredicateType.OBSTACLE, x-1, y).isNegative()
                .and(PredicateType.PIT, x-1, y).isNegative()
                .and(PredicateType.GOLD, x, y+1).isNegative()
                .and(PredicateType.WUMPUS, x, y+1).isNegative()
-               .and(PredicateType.OBSTACLE, x, y+1).isNegative()
                .and(PredicateType.PIT, x, y+1).isNegative()
                .and(PredicateType.GOLD, x, y-1).isNegative()
                .and(PredicateType.WUMPUS, x, y-1).isNegative()
-               .and(PredicateType.OBSTACLE, x, y-1).isNegative()
                .and(PredicateType.PIT, x, y-1).isNegative()
                .getHead();
         }

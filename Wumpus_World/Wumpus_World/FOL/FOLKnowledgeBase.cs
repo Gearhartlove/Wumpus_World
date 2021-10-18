@@ -36,11 +36,18 @@ namespace Wumpus_World {
             this.boardY = height;
         }
 
+        /// <summary>
+        /// This method represents the inference step
+        /// </summary>
         public void infer() {
             processPercepts();
             reduceComplexFacts();
         }
         
+        /// <summary>
+        /// This method goes through every percept that was added last frame and adds them to the knowledge base
+        /// by unification.
+        /// </summary>
         private void processPercepts() {
             while (percepts.Count != 0) {
                 FOLFact current = percepts.Dequeue();
@@ -51,6 +58,10 @@ namespace Wumpus_World {
             }
         }
 
+        /// <summary>
+        /// This is the reduction stage of our algorithm. This method tried to break down 'P() V P()' facts based on
+        /// other facts.
+        /// </summary>
         public void reduceComplexFacts() {
             int startCount = complexFacts.Count;
             for(int i = 0; i < startCount; i++) {
@@ -141,6 +152,13 @@ namespace Wumpus_World {
             return false;
         }
 
+        /// <summary>
+        /// Checks if a certain fact or facts are in at least on adjacent cell. Used in the validate method.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="types"></param>
+        /// <returns></returns>
         private bool hasFactSurrounding(int x, int y, params PredicateType[] types) {
             foreach (var type in types) {
                 foreach (var fact in getSimpleFactsByType(type)) {
@@ -158,6 +176,13 @@ namespace Wumpus_World {
             return false;
         }
 
+        /// <summary>
+        /// Checks if a certain fact or facts are in the current cell. Used in the validate method.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="types"></param>
+        /// <returns></returns>
         private bool hasFactAt(int x, int y, params PredicateType[] types) {
             foreach (var type in types) {
                 foreach (var fact in getSimpleFactsByType(type)) {
@@ -169,6 +194,10 @@ namespace Wumpus_World {
             return false;
         }
 
+        /// <summary>
+        /// Simple method that sorts the simple fact from the complex ones.
+        /// </summary>
+        /// <param name="facts"></param>
         private void addFacts(params FOLFact[] facts) {
             foreach (var fact in facts) {
                 if (fact.length() > 1) {
@@ -179,6 +208,10 @@ namespace Wumpus_World {
             }
         }
 
+        /// <summary>
+        /// Helper Method for filtering facts that should be added to the simple fact list.
+        /// </summary>
+        /// <param name="fact"></param>
         private void addSimpleFact(FOLFact fact) {
             if(!simpleFacts.ContainsKey(fact.Type)) simpleFacts[fact.Type] = new List<FOLFact>();
             if(simpleFacts[fact.Type].Contains(fact)) return;
@@ -186,6 +219,13 @@ namespace Wumpus_World {
             simpleFacts[fact.Type].Add(fact);
         }
 
+        /// <summary>
+        /// Helper method to return a fact of the given type at the given location.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public FOLFact getSimpleFact(PredicateType type, int x, int y) {
             foreach (var fact in getSimpleFactsByType(type)) {
                 if (fact.X == x && fact.Y == y) return fact;
@@ -194,11 +234,23 @@ namespace Wumpus_World {
             return null;
         }
 
+        /// <summary>
+        /// Helper method to return all facts of the given type at the given location.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public List<FOLFact> getSimpleFactsByType(PredicateType type) {
             if(!simpleFacts.ContainsKey(type)) simpleFacts[type] = new List<FOLFact>();
             return simpleFacts[type];
         }
 
+        /// <summary>
+        /// This method queries the state of the fact at the given point. I returns either TRUE, FALSE, or UNKNOWN.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public KnowledgeQuery queryFact(PredicateType type, int x, int y) {
             FOLFact fact = getSimpleFact(type, x, y);
             if (fact == null) return KnowledgeQuery.UNKNOWN;
@@ -206,16 +258,26 @@ namespace Wumpus_World {
             return KnowledgeQuery.TRUE;
         }
 
-        public FOLFact[] queryFactType(PredicateType type) {
-            return simpleFacts[type].ToArray();
-        }
-
+        /// <summary>
+        /// Adds a fact to the percepts list for processing.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public void addPercept(PredicateType type, int x, int y) {
             if (cantBeOverriden(type, x, y)) return;
             FOLFact fact = new FOLFact(type, x, y, this.boardX, this.boardY, this);
             percepts.Enqueue(fact);
         }
         
+        
+        /// <summary>
+        /// Checks if the given cell type can be overriden.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public bool cantBeOverriden(PredicateType type, int x, int y) {
             return this.queryFact(PredicateType.PIT, x, y) == KnowledgeQuery.TRUE ||
                     this.queryFact(PredicateType.GOLD, x, y) == KnowledgeQuery.TRUE ||
@@ -224,19 +286,33 @@ namespace Wumpus_World {
                     this.queryFact(PredicateType.EMPTY, x, y) == KnowledgeQuery.TRUE;
         }
 
+        
+        /// <summary>
+        /// Returns the String representation of the Simple Facts.
+        /// </summary>
+        /// <returns></returns>
         public string simpleFactsString() {
             var res = "";
             foreach (var facts in simpleFacts.Values) {
-                res += string.Join(", ", facts) + ", ";
+                if(facts.Count > 0) res += string.Join(", ", facts) + ", ";
             }
 
             return res;
         }
 
+        /// <summary>
+        /// Returns the String representation of the Complex Facts.
+        /// </summary>
+        /// <returns></returns>
         public string complexFactsString() {
             return string.Join(", ", complexFacts);
         }
 
+        
+        /// <summary>
+        /// Returns the String representation of the Knowledge Base.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString() {
             return simpleFactsString() + "\n" + complexFactsString();
         }
