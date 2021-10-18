@@ -111,7 +111,7 @@ namespace Wumpus_World {
 			if (obj is FOLFact) {
 				FOLFact other = (FOLFact) obj;
 				if (this.hasNext() && other.hasNext()) {
-					return this.Type == other.type && this.x == other.x && this.y == other.y && this.next.Equals(other.next);
+					return this.Type == other.type && this.x == other.x && this.y == other.y && this.Not == other.Not && this.next.Equals(other.next);
 				}
 
 				return this.Type == other.type && this.x == other.x && this.y == other.y;
