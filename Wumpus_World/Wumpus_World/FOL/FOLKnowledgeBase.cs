@@ -97,6 +97,25 @@ namespace Wumpus_World {
                 complexFacts.Enqueue(complexFact);
             }
         }
+
+        /// <summary>
+        /// This is a method that returns true if the cell has a predicate of that type in a complex fact.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public bool isSuspected(PredicateType type, int x, int y) {
+            foreach (var complexFact in complexFacts) {
+                var current = complexFact;
+                do {
+                    if (current.Type == type && current.X == x && current.Y == y) return true;
+                    current = current.Next;
+                } while (current.hasNext());
+            }
+
+            return false;
+        }
         
         //Valid Check will check to see, based on facts, if a claim is valid or not.
         /// <summary>
@@ -106,7 +125,7 @@ namespace Wumpus_World {
         /// </summary>
         /// <param name="fact"></param>
         /// <returns></returns>
-        public bool validStateCheck(FOLFact fact) {
+        private bool validStateCheck(FOLFact fact) {
             switch (fact.Type) {
                 case PredicateType.PIT:
                     return !hasFactSurrounding(fact.X, fact.Y, PredicateType.EMPTY)
@@ -153,7 +172,7 @@ namespace Wumpus_World {
         private void addFacts(params FOLFact[] facts) {
             foreach (var fact in facts) {
                 if (fact.length() > 1) {
-                    complexFacts.Enqueue(fact);
+                    if(!complexFacts.Contains(fact)) complexFacts.Enqueue(fact);
                 } else {
                     addSimpleFact(fact);
                 }

@@ -5,17 +5,21 @@ using System.Linq;
 namespace Wumpus_World {
     public class FOLAgent : Agent {
 
+        List<CellLocation> placesToGo = new List<CellLocation>();
         private FOLKnowledgeBase knowledgeBase;
+        
+        private Random rng = new Random(); 
 
+        private int lastX = -1, lastY = -1;
+        private int lastTargetX = -1, lastTargetY = -1;
+        
         public override void Navigate(Board board) {
             board.SetAgent(this);
             Console.WriteLine(board);
 
             knowledgeBase = new FOLKnowledgeBase(board.GetSize, board.GetSize);
-            
-            List<CellLocation> placesToGo = new List<CellLocation>();
             placesToGo.Add(new CellLocation(knowledgeBase, currentX, currentY));
-            
+
             while (AliveCheck()) {
                 if(GoldCheck()) break;
 
@@ -28,24 +32,30 @@ namespace Wumpus_World {
                 if(!modifiers.isBreeze && !modifiers.isGlitter && !modifiers.isSmell)
                     knowledgeBase.addPercept(PredicateType.EMPTY, currentX, currentY);
 
+                if(currentX == lastX && currentY == lastY) 
+                    knowledgeBase.addPercept(PredicateType.OBSTACLE, lastTargetX, lastTargetY);
+                
                 knowledgeBase.infer();
                 Console.WriteLine(knowledgeBase.simpleFactsString());
                 Console.WriteLine(knowledgeBase.complexFactsString());
 
                 placesToGo.RemoveAll(i => !i.calcScore(currentX, currentY));
-                
-                if(placesToGo.Count > 1) 
-                placesToGo.Sort(delegate(CellLocation location1, CellLocation location2) {
-                    if (location1.Score > location2.Score) {
-                        return -1;
-                    }
 
-                    if (location1.Score == location2.Score) {
-                        return 0;
-                    }
+                if (placesToGo.Count > 1) {
+                    shuffle(ref placesToGo);
+                    placesToGo.Sort(delegate(CellLocation location1, CellLocation location2) {
+                        if (location1.Score > location2.Score) {
+                            return -1;
+                        }
 
-                    return 1;
-                });
+                        if (location1.Score == location2.Score) {
+                            return 0;
+                        }
+
+                        return 1;
+                    });
+
+                } 
                 
                 Console.WriteLine("Oder of cells: " + string.Join(", ", placesToGo));
 
@@ -53,18 +63,37 @@ namespace Wumpus_World {
                 placesToGo.RemoveAt(0);
                 
                 Console.WriteLine(target);
-                
+                lastX = currentX;
+                lastY = currentY;
                 TravelPath(board[target.X, target.Y]);
                 
                 if(currentX + 1 >= 0 && currentX + 1 < board.GetSize && currentY >= 0 && currentY < board.GetSize && !QueryVisited(board[currentX + 1, currentY])) 
-                    placesToGo.Add(new CellLocation(knowledgeBase, currentX + 1, currentY));
+                    addPlace(new CellLocation(knowledgeBase, currentX + 1, currentY));
                 if(currentX - 1 >= 0 && currentX - 1 < board.GetSize && currentY >= 0 && currentY < board.GetSize && !QueryVisited(board[currentX - 1, currentY])) 
-                    placesToGo.Add(new CellLocation(knowledgeBase, currentX - 1, currentY)); 
+                    addPlace(new CellLocation(knowledgeBase, currentX - 1, currentY)); 
                 if(currentX >= 0 && currentX < board.GetSize && currentY + 1 >= 0 && currentY + 1 < board.GetSize && !QueryVisited(board[currentX, currentY + 1])) 
-                    placesToGo.Add(new CellLocation(knowledgeBase, currentX, currentY + 1)); 
+                    addPlace(new CellLocation(knowledgeBase, currentX, currentY + 1)); 
                 if(currentX >= 0 && currentX < board.GetSize && currentY - 1 >= 0 && currentY - 1 < board.GetSize && !QueryVisited(board[currentX, currentY - 1])) 
-                    placesToGo.Add(new CellLocation(knowledgeBase, currentX, currentY - 1)); 
+                    addPlace(new CellLocation(knowledgeBase, currentX, currentY - 1));
+
+                lastTargetX = target.X;
+                lastTargetY = target.Y;
             }
+        }
+
+        private void addPlace(CellLocation location) {
+            if(!placesToGo.Contains(location)) placesToGo.Add(location); 
+        }
+
+        private void shuffle(ref List<CellLocation> list) {  
+            int n = list.Count;  
+            while (n > 1) {  
+                n--;  
+                int k = rng.Next(n + 1);  
+                var value = list[k];  
+                list[k] = list[n];  
+                list[n] = value;  
+            }  
         }
     }
 
@@ -72,6 +101,7 @@ namespace Wumpus_World {
         const int POINTS_FOR_WUMPUS = -200;
         const int POINTS_FOR_PIT = -200;
         const int POINTS_FOR_SAFE = 200;
+        const int POINTS_FOR_SUSPECT_GOLD = 300;
 
         private FOLKnowledgeBase knowledgeBase;
         private int x, y, score;
@@ -90,6 +120,7 @@ namespace Wumpus_World {
             var wumpus = knowledgeBase.queryFact(PredicateType.WUMPUS, x, y);
             var pit = knowledgeBase.queryFact(PredicateType.PIT, x, y);
             var distance = Math.Abs(currentX - x) + Math.Abs(currentY - y);
+            var suspectGold = knowledgeBase.isSuspected(PredicateType.GOLD, x, y);
 
             if (gold == KnowledgeQuery.TRUE) {
                 score = Int32.MaxValue;
@@ -104,9 +135,18 @@ namespace Wumpus_World {
             if (pit == KnowledgeQuery.TRUE) score += POINTS_FOR_PIT;
             if (wumpus == KnowledgeQuery.TRUE) score += POINTS_FOR_WUMPUS;
             if (safe == KnowledgeQuery.TRUE) score += POINTS_FOR_SAFE;
+            if (suspectGold) score += POINTS_FOR_SUSPECT_GOLD;
             score -= distance;
 
             return true;
+        }
+        
+        public override bool Equals(object obj) {
+            if (obj is CellLocation) {
+                CellLocation other = (CellLocation) obj;
+                return this.x == other.x && this.y == other.y;
+            }
+            return base.Equals(obj);
         }
 
         public int Score => score;

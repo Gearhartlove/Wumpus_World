@@ -86,7 +86,7 @@ namespace Wumpus_World {
 
 		public override string ToString() {
 			var not = this.not ? "-" : "";
-			var str = not + type.ToString() + "(" + x + ", " + y + ")";
+			var str = not + type + "(" + x + ", " + y + ")";
 			if (hasNext()) {
 				string uni = unifierType == UnifierType.AND ? " A " : " v ";
 				return str + uni + next.ToString();
@@ -110,6 +110,10 @@ namespace Wumpus_World {
 		public override bool Equals(object obj) {
 			if (obj is FOLFact) {
 				FOLFact other = (FOLFact) obj;
+				if (this.hasNext() && other.hasNext()) {
+					return this.Type == other.type && this.x == other.x && this.y == other.y && this.next.Equals(other.next);
+				}
+
 				return this.Type == other.type && this.x == other.x && this.y == other.y;
 			}
 			
