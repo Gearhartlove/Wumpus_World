@@ -64,6 +64,7 @@ namespace Wumpus_World
         /// </summary>
         public void Shoot()
         {
+            Console.WriteLine("Shot an arrow...");
             if (arrowCount > 0)
             {
                 switch (facing)
@@ -127,6 +128,11 @@ namespace Wumpus_World
                 arrowX = currentX;
                 arrowY = currentY;
             }
+        }
+
+        public int GetArrowCount()
+        {
+            return arrowCount;
         }
 
         /// <summary>
