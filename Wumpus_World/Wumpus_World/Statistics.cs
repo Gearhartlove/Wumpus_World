@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks.Sources;
+using System.Xml.Schema;
 
 namespace Wumpus_World {
     public class Statistics
     {
+        // Important wumpus world Statistics + Getters + Incrementers
         private int goldFound = 0;
         public int GetGoldFound => goldFound;
         public void incGoldFound() => goldFound++;
@@ -26,6 +28,10 @@ namespace Wumpus_World {
         public int GetCellsExplored => cellsExplored;
         public void incCellsExplored() => cellsExplored++;
 
+        private int score = 0;
+        public int GetScore => score;
+        public void incScore() => score++;
+
         public override String ToString() {
             String o = "";
             o += "Gold Found: " + GetGoldFound + "\n";
@@ -37,6 +43,7 @@ namespace Wumpus_World {
             return o;
         }
 
+        // Clear the Statistics each agent navigation cycle
         public void ClearStats() {
             goldFound = 0;
             wumpusKilled = 0;
@@ -45,11 +52,13 @@ namespace Wumpus_World {
             cellsExplored = 0;
         }
 
+        // Used to copy the statistic and add to a list
         public Statistics Copy() {
             return new Statistics() {
                 cellsExplored = GetCellsExplored, goldFound = GetGoldFound,
                 pitFalls = GetPitFalls, wumpusFalls = GetWumpusFalls,
                 wumpusKilled = GetWumpusKilled,
+                score = GetScore
             };
         }
     }

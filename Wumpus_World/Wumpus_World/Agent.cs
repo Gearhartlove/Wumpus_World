@@ -13,7 +13,6 @@ namespace Wumpus_World {
         protected int GetArrowCount => arrowCount;
         protected Statistics stats = new Statistics();
         public Statistics GetStats => stats;
-        private int score = 0;
         private Board board;
         protected bool isDead;
         private Dictionary<Tuple<int,int>, bool> cellsVisited = new Dictionary<Tuple<int, int>, bool>();
@@ -108,7 +107,7 @@ namespace Wumpus_World {
                         break;
                 }
 
-                score++;
+                stats.incScore();
                 arrowCount--;
                 // reset arrow position to agent
                 arrowX = currentX;
@@ -160,7 +159,7 @@ namespace Wumpus_World {
                     break;
             }
             UpdateVisited(); // update visited cells
-            score++;
+            stats.incScore();
             // checks if wall, does not let the agent move to wall cell
             if (ObstacleCheck(board[currentX, currentY].GetState(), prevX, prevY)) {
                 return State.Obstacle;
@@ -186,7 +185,7 @@ namespace Wumpus_World {
                     facing = Direction.North;
                     break;
             }
-            score++;
+            stats.incScore();
         }
         
         /// <summary>
@@ -207,7 +206,7 @@ namespace Wumpus_World {
                     facing = Direction.South;
                     break;
             }
-            score++;
+            stats.incScore();
         }
         
         /// Helper method or "macro" to move agent North (turns included)
