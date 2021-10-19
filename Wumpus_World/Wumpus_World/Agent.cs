@@ -12,6 +12,7 @@ namespace Wumpus_World {
         private int arrowCount;
         protected int GetArrowCount => arrowCount;
         protected Statistics stats = new Statistics();
+        public Statistics GetStats => stats;
         private int score = 0;
         private Board board;
         protected bool isDead;
@@ -52,6 +53,7 @@ namespace Wumpus_World {
         /// </summary>
         /// <param name="board"></param>
         public virtual void Navigate(Board board) {
+            stats.ClearStats();
             board.SetAgent(this); // NEEDS TO BE INCLUDED FOR BOARD TO KNOW WHERE THE AGENT IS AND PRINT CORRECTLY.
         }
 

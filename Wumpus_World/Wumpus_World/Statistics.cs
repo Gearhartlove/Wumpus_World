@@ -7,7 +7,6 @@ namespace Wumpus_World {
     {
         private int goldFound = 0;
         public int GetGoldFound => goldFound;
-
         public void incGoldFound() => goldFound++;
 
         private int wumpusKilled = 0;

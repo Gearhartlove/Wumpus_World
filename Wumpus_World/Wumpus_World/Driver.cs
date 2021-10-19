@@ -1,4 +1,6 @@
 ﻿using System;
+
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Wumpus_World {
@@ -17,7 +19,7 @@ namespace Wumpus_World {
         public Driver(FOLAgent foa, ReflexAgent ra) {
             this.foa = foa;
             this.ra = ra;
-            sm = new StatsManager();
+            sm = new StatsManager(iterations);
         }
 
         /// <summary>
@@ -33,20 +35,24 @@ namespace Wumpus_World {
         /// Run the wumpus world program: generate 10 boards for each size 5x5 to 25x25, stepping by 5 each board.
         /// </summary>
         public void RunWumpusWord() {
-            for (int boardSize = 1; boardSize <= 5; boardSize++) {
-                int size = boardSize * 5; 
+            for (int boardSize = 0; boardSize < 5; boardSize++) {
+                int size = (boardSize+1) * 5; 
+                sm.foaStats.Add(new List<Statistics>());
+                sm.raStats.Add(new List<Statistics>());
+                
                 // Collecting statistics
-                for (int boardNum = 1; boardNum <= iterations; boardNum++) {
+                for (int boardNum = 0; boardNum < iterations; boardNum++) {
                     Board board = new Board(size);
                     //foa.SetBoard(board);
                     ra.SetBoard(board);
                     //foa.Navigate(board);
                     ra.Navigate(board);
+                    sm.raStats[boardSize].Add(ra.GetStats);
+                    //sm.foaStats[boardSize].Add(foa.GetStats);
                 }
+                sm.Averages("ra", boardSize+1);
+                //sm.Average("foa");
             }
-            
-            sm.Average("ra");
-            sm.Average("foa");
         }
     }
 }
