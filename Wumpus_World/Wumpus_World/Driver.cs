@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Wumpus_World {
     public class Driver {
@@ -35,18 +36,19 @@ namespace Wumpus_World {
                 // Collecting statistics
                 for (int boardNum = 1; boardNum <= iterations; boardNum++) {
                     Board board = new Board(size);
-                    foa.SetBoard(board);
-                    //ra.SetBoard(board);
-                    foa.Navigate(board);
-                    //ra.Navigate(board);
+                    //foa.SetBoard(board);
+                    ra.SetBoard(board);
+                    //foa.Navigate(board);
+                    ra.Navigate(board);
+                    
+                    ra.statsList[boardNum - 1].PrintStats(board);
                 }
-                
-                // print out the averages of stats
+                // print out the averages of state
+                //Console.WriteLine("Reflex Agent");
                 //ra.PrintAverage();
-                foa.PrintAverage();
+                //Console.WriteLine("First Order Logic Agent");
+                //foa.PrintAverage();
                 // clear the stats for next loop
-                //ra.ClearAverage();
-                foa.ClearAverage();
             }
         }
     }

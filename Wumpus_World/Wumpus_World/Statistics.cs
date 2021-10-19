@@ -31,6 +31,7 @@ namespace Wumpus_World {
         public void AddToStat(char key, double val) {
             this.agentStats[key] += val;
         }
+        
         /// <summary>
         /// Quickly add the correct score when slaying a Wumpus
         /// </summary>

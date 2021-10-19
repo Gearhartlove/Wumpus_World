@@ -11,7 +11,7 @@ namespace Wumpus_World {
         private Random rng = new Random();
         
         public override void Navigate(Board board) {
-            board.SetAgent(this);
+            base.Navigate(board);
 
             knowledgeBase = new FOLKnowledgeBase(board.GetSize, board.GetSize);
             routeAdjacent(board);
@@ -48,9 +48,14 @@ namespace Wumpus_World {
                         return 1;
                     });
 
-                } 
-                
+                }
+
+                if (placesToGo.Count == 0) {
+                    isDead = true;
+                    break;
+                }
                 var target = placesToGo.First();
+                
                 placesToGo.RemoveAt(0);
                 
                 TravelPath(board[target.X, target.Y]);
@@ -61,7 +66,6 @@ namespace Wumpus_World {
                     routeAdjacent(board);
                 }
             }
-            AppendStatsList(stats);
         }
 
         private void routeAdjacent(Board board) {

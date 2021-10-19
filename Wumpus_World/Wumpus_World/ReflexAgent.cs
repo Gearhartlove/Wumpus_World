@@ -5,7 +5,7 @@ namespace Wumpus_World
     public class ReflexAgent : Agent
     {
         // Creates a Statistics class "stats" to track agent stats
-        Statistics stats = new Statistics();
+        public Statistics stats = new Statistics();
         // Random class for use when randomness is required
         Random random = new Random();
 
@@ -41,9 +41,7 @@ namespace Wumpus_World
         /// <param name="_board"></param>
         public override void Navigate(Board _board)
         {
-            // Sets the current board's current agent as this agent
-            _board.SetAgent(this);
-
+            base.Navigate(_board); // set agent to board, reset statistics
             // Sets the board variable to be the input _board
             board = _board;
 
@@ -81,7 +79,7 @@ namespace Wumpus_World
                 }
                 life--;
             }
-            AppendStatsList(stats);
+            //stats.PrintStats(board); 
         }
 
         /// <summary>
