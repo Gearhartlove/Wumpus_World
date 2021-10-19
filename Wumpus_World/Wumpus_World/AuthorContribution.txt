@@ -5,7 +5,8 @@ Modifier.cs
 Driver.cs
 Agent.cs
 Board.cs
-Cell.cs
+Statistics.cs
+StatsManager.cs
 
 Brooks Palin contributed to: 
 FOLAgent.cs
