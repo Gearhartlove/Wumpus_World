@@ -10,6 +10,10 @@ namespace Wumpus_World {
         
         private Random rng = new Random();
         
+        /// <summary>
+        /// Method navigates the board. The agent uses fol to decide where to go to find the gold.
+        /// </summary>
+        /// <param name="board"></param>
         public override void Navigate(Board board) {
             base.Navigate(board);
 
@@ -68,6 +72,10 @@ namespace Wumpus_World {
             }
         }
 
+        /// <summary>
+        /// Adds adjacent cells to path if they are legal.
+        /// </summary>
+        /// <param name="board"></param>
         private void routeAdjacent(Board board) {
             if(currentX + 1 >= 0 && currentX + 1 < board.GetSize && currentY >= 0 && currentY < board.GetSize && !QueryVisited(board[currentX + 1, currentY])) 
                 addPlace(new CellLocation(knowledgeBase, currentX + 1, currentY));
@@ -95,6 +103,10 @@ namespace Wumpus_World {
         }
     }
 
+    
+    /// <summary>
+    /// A Defintion for a cell to be traveled too.
+    /// </summary>
     class CellLocation {
         const int POINTS_FOR_WUMPUS = -1000;
         const int POINTS_FOR_PIT = -1000;
@@ -112,6 +124,12 @@ namespace Wumpus_World {
             this.y = y;
         }
 
+        /// <summary>
+        /// Calculates the score used for determining which cell is better. Higher the scoer the more reason to travel there.
+        /// </summary>
+        /// <param name="currentX"></param>
+        /// <param name="currentY"></param>
+        /// <returns></returns>
         public bool calcScore(int currentX, int currentY) {
             score = 0;
             var safe = knowledgeBase.queryFact(PredicateType.SAFE, x, y);
