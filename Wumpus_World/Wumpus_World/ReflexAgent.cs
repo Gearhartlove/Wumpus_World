@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Wumpus_World
 {
     public class ReflexAgent : Agent
     {
-        // Creates a Statistics class "stats" to track agent stats
-        public Statistics stats = new Statistics();
+        // cells traveled through
+        public List<Cell> traveledCells = new List<Cell>();
         // Random class for use when randomness is required
         Random random = new Random();
 
@@ -75,7 +76,8 @@ namespace Wumpus_World
                 if (currentCell.GetState() == State.Gold)
                 {
                     isSolved = true;
-                    stats.IncrementStat('G');
+                    stats.incGoldFound();
+                    stats.incWumpusFalls();
                 }
                 life--;
             }
@@ -129,27 +131,24 @@ namespace Wumpus_World
                 {
                     MoveNorth();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
+                    stats.incCellsExplored();
                     lastCellDirection = Direction.South;
                 }
                 else if (!agentJustSpawned && !willAvoidPits && !willAvoidWumpus)
                 {
                     MoveNorth();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.South;
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
                 {
                     MoveBack();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
                 {
                     MoveNorth();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.South;
                 }
             }
@@ -160,27 +159,23 @@ namespace Wumpus_World
                 {
                     MoveEast();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.West;
                 }
                 else if (!agentJustSpawned && !willAvoidPits && !willAvoidWumpus)
                 {
                     MoveEast();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.West;
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
                 {
                     MoveBack();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
                 {
                     MoveEast();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.West;
                 }
             }
@@ -191,27 +186,23 @@ namespace Wumpus_World
                 {
                     MoveSouth();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.North;
                 }
                 else if (!agentJustSpawned && !willAvoidPits && !willAvoidWumpus)
                 {
                     MoveSouth();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.North;
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
                 {
                     MoveBack();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
                 {
                     MoveSouth();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.North;
                 }
             }
@@ -222,27 +213,23 @@ namespace Wumpus_World
                 {
                     MoveWest();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.East;
                 }
                 else if (!agentJustSpawned && !willAvoidPits && !willAvoidWumpus)
                 {
                     MoveWest();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.East;
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && !isDesparate)
                 {
                     MoveBack();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                 }
                 else if (!agentJustSpawned && (willAvoidPits || willAvoidWumpus) && isDesparate)
                 {
                     MoveWest();
                     UpdateCurrentCell();
-                    stats.IncrementStat('A');
                     lastCellDirection = Direction.East;
                 }
             }
@@ -267,7 +254,6 @@ namespace Wumpus_World
                                 decidedMove = true;
                                 MoveNorth();
                                 UpdateCurrentCell();
-                                stats.IncrementStat('A');
                                 lastCellDirection = Direction.South;
                             }
                             break;
@@ -277,7 +263,6 @@ namespace Wumpus_World
                                 decidedMove = true;
                                 MoveEast();
                                 UpdateCurrentCell();
-                                stats.IncrementStat('A');
                                 lastCellDirection = Direction.West;
                             }
                             break;
@@ -287,7 +272,6 @@ namespace Wumpus_World
                                 decidedMove = true;
                                 MoveSouth();
                                 UpdateCurrentCell();
-                                stats.IncrementStat('A');
                                 lastCellDirection = Direction.North;
                             }
                             break;
@@ -297,7 +281,6 @@ namespace Wumpus_World
                                 decidedMove = true;
                                 MoveWest();
                                 UpdateCurrentCell();
-                                stats.IncrementStat('A');
                                 lastCellDirection = Direction.East;
                             }
                             break;
@@ -322,7 +305,6 @@ namespace Wumpus_World
                             if (IsMoveValid(cellX, cellY + 1) && !QueryVisited(board[cellX, cellY + 1]))
                             {
                                 MoveNorth();
-                                stats.IncrementStat('A');
                                 UpdateCurrentCell();
                                 lastCellDirection = Direction.South;
                                 DeathCheck();
@@ -332,7 +314,6 @@ namespace Wumpus_World
                                 {
                                     MoveBack();
                                     UpdateCurrentCell();
-                                    stats.IncrementStat('A');
                                 }
                             }
                             break;
@@ -340,7 +321,6 @@ namespace Wumpus_World
                             if (IsMoveValid(cellX + 1, cellY) && !QueryVisited(board[cellX + 1, cellY]))
                             {
                                 MoveEast();
-                                stats.IncrementStat('A');
                                 UpdateCurrentCell();
                                 lastCellDirection = Direction.West;
                                 DeathCheck();
@@ -350,7 +330,6 @@ namespace Wumpus_World
                                 {
                                     MoveBack();
                                     UpdateCurrentCell();
-                                    stats.IncrementStat('A');
                                 }
                             }
                             break;
@@ -358,7 +337,6 @@ namespace Wumpus_World
                             if (IsMoveValid(cellX, cellY - 1) && !QueryVisited(board[cellX, cellY - 1]))
                             {
                                 MoveSouth();
-                                stats.IncrementStat('A');
                                 UpdateCurrentCell();
                                 lastCellDirection = Direction.North;
                                 DeathCheck();
@@ -368,7 +346,6 @@ namespace Wumpus_World
                                 {
                                     MoveBack();
                                     UpdateCurrentCell();
-                                    stats.IncrementStat('A');
                                 }
                             }
                             break;
@@ -376,7 +353,6 @@ namespace Wumpus_World
                             if (IsMoveValid(cellX - 1, cellY) && !QueryVisited(board[cellX - 1, cellY]))
                             {
                                 MoveWest();
-                                stats.IncrementStat('A');
                                 UpdateCurrentCell();
                                 lastCellDirection = Direction.South;
                                 DeathCheck();
@@ -386,7 +362,6 @@ namespace Wumpus_World
                                 {
                                     MoveBack();
                                     UpdateCurrentCell();
-                                    stats.IncrementStat('A');
                                 }
                             }
                             break;
@@ -438,6 +413,10 @@ namespace Wumpus_World
         void UpdateCurrentCell()
         {
             currentCell = getCell(board);
+            if (!traveledCells.Contains(currentCell)) {
+                traveledCells.Add(currentCell);
+                stats.incCellsExplored();
+            }
             cellX = currentCell.getX;
             cellY = currentCell.getY;
         }
@@ -474,8 +453,7 @@ namespace Wumpus_World
             if (currentCell.GetState() == State.Wumpus)
             {
                 isDead = true;
-                stats.IncrementStat('D');
-                stats.IncrementStat('W');
+                stats.incWumpusFalls();
             }
 
             // If the current cell is a pit:
@@ -483,8 +461,7 @@ namespace Wumpus_World
             if (currentCell.GetState() == State.Pit)
             {
                 isDead = true;
-                stats.IncrementStat('D');
-                stats.IncrementStat('P');
+                stats.incPitFalls();
             }
         }
     }

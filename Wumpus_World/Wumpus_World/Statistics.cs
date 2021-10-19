@@ -1,97 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks.Sources;
 
 namespace Wumpus_World {
     public class Statistics
     {
-        // Stats to be tracked
-        public Dictionary<char, double> agentStats = new Dictionary<char, double>()
-        {
-            {'A', 0},
-            {'G', 0},
-            {'K', 0},
-            {'W', 0},
-            {'D', 0},
-            {'P', 0},
-            {'E', 0},
-            {'S', 0}
-        };
+        private int goldFound = 0;
+        public int GetGoldFound => goldFound;
 
-        /// <summary>
-        /// Increases the desired statistic by one
-        /// A for actions, G for gold, K for kills, W for Wumpus deaths,
-        /// D for total deaths, P for pit deaths, E for cells explored, S for score
-        /// </summary>
-        /// <param name="_key"></param>
-        public void IncrementStat(char _key)
-        {
-            agentStats[_key]++;
-        }
+        public void incGoldFound() => goldFound++;
 
-        public void AddToStat(char key, double val) {
-            this.agentStats[key] += val;
-        }
+        private int wumpusKilled = 0;
+        public int GetWumpusKilled => wumpusKilled;
+        public void incWumpusKilled() => wumpusKilled++;
         
-        /// <summary>
-        /// Quickly add the correct score when slaying a Wumpus
-        /// </summary>
-        public void KilledWumpus()
-        {
-            agentStats['S'] += 100;
+        private int pitFalls = 0;
+        public int GetPitFalls => pitFalls;
+
+        public void incPitFalls() => pitFalls++;
+
+        private int wumpusFalls = 0;
+        public int GetWumpusFalls => wumpusFalls;
+        public void incWumpusFalls() => wumpusFalls++;
+        
+        private int cellsExplored = 0;
+        public int GetCellsExplored => cellsExplored;
+        public void incCellsExplored() => cellsExplored++;
+
+        public override String ToString() {
+            String o = "";
+            o += "Gold Found: " + GetGoldFound + "\n";
+            o += "Wumpus Killed: " + GetWumpusKilled + "\n";
+            o += "Deaths to Pit: " + GetPitFalls + "\n";
+            o += "Deaths to Wumpus: " + GetWumpusFalls + "\n";
+            o += "Cells Explored: " + GetCellsExplored + "\n";
+            //o += "Agent Score " + getScore + "\n";
+            return o;
         }
 
-        /// <summary>
-        /// Quickly add the correct score when finding gold
-        /// </summary>
-        public void GoldAquired()
-        {
-            agentStats['S'] += 1000;
-        }
-
-        /// <summary>
-        /// Removes a point from the score for each action used by an agent
-        /// </summary>
-        public void FactorInActions()
-        {
-            agentStats['S'] -= agentStats['A'];
-        }
-
-        /// <summary>
-        /// Gets and returns the desired statistic as an int
-        /// </summary>
-        /// <param name="_key"></param>
-        /// <returns></returns>
-        public double GetStat(char _key)
-        {
-            return agentStats[_key];
-        }
-
-        /// <summary>
-        /// Resets all values within the stat dictionary
-        /// </summary>
-        public void Reset()
-        {
-            agentStats['A'] = 0;
-            agentStats['G'] = 0;
-            agentStats['K'] = 0;
-            agentStats['W'] = 0;
-            agentStats['D'] = 0;
-            agentStats['P'] = 0;
-            agentStats['E'] = 0;
-        }
-
-        /// <summary>
-        /// Prints all statistics to the console
-        /// </summary>
-        public void PrintStats(Board board)
-        {
-            Console.WriteLine("Averages for Board Size: " +  board.GetSize + "x" + board.GetSize);
-            Console.WriteLine("Actions taken: " + agentStats['A'] + "\nGolds found: "
-                + agentStats['G'] + "\nWumpus' killed: " + agentStats['K'] + "\nDeaths to Wumpus: "
-                + agentStats['W'] + "\nTotal deaths: " + agentStats['D'] + "\nDeaths to pit: "
-                + agentStats['P'] + "\nCells explored: " + agentStats['E']);
-            Console.WriteLine("-----------------------------------------------------------------------------------");
-            Console.WriteLine();
+        public void ClearStats() {
+            goldFound = 0;
+            wumpusKilled = 0;
+            pitFalls = 0;
+            wumpusFalls = 0;
+            cellsExplored = 0;
         }
     }
 }

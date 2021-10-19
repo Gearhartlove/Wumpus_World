@@ -6,6 +6,7 @@ namespace Wumpus_World {
         // References of agents used throughout the program
         private FOLAgent foa;
         private ReflexAgent ra;
+        private StatsManager sm;
         private const int iterations = 10;
         
         /// <summary>
@@ -16,6 +17,7 @@ namespace Wumpus_World {
         public Driver(FOLAgent foa, ReflexAgent ra) {
             this.foa = foa;
             this.ra = ra;
+            sm = new StatsManager();
         }
 
         /// <summary>
@@ -40,16 +42,11 @@ namespace Wumpus_World {
                     ra.SetBoard(board);
                     //foa.Navigate(board);
                     ra.Navigate(board);
-                    
-                    ra.statsList[boardNum - 1].PrintStats(board);
                 }
-                // print out the averages of state
-                //Console.WriteLine("Reflex Agent");
-                //ra.PrintAverage();
-                //Console.WriteLine("First Order Logic Agent");
-                //foa.PrintAverage();
-                // clear the stats for next loop
             }
+            
+            sm.Average("ra");
+            sm.Average("foa");
         }
     }
 }

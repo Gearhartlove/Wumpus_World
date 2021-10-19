@@ -11,8 +11,7 @@ namespace Wumpus_World {
         private int arrowX, arrowY;
         private int arrowCount;
         protected int GetArrowCount => arrowCount;
-        protected Statistics statistics = new Statistics();
-        public List<Statistics> statsList = new List<Statistics>();
+        protected Statistics stats = new Statistics();
         private int score = 0;
         private Board board;
         protected bool isDead;
@@ -53,13 +52,7 @@ namespace Wumpus_World {
         /// </summary>
         /// <param name="board"></param>
         public virtual void Navigate(Board board) {
-            statsList.Add(statistics);
-            statistics = new Statistics();
-            //stats.PrintStats(board);
-            //stats = new Statistics();
-            //AppendStatsList(stats);
             board.SetAgent(this); // NEEDS TO BE INCLUDED FOR BOARD TO KNOW WHERE THE AGENT IS AND PRINT CORRECTLY.
-            // Put navigating logic below
         }
 
         /// <summary>
@@ -127,7 +120,7 @@ namespace Wumpus_World {
         /// <returns></returns>
         private bool WumpusShot() {
             if (board[arrowX, arrowY].GetState() == State.Wumpus) {
-                statistics.IncrementStat('K');
+                stats.incWumpusKilled();
                 return true;
             }
             return false;
@@ -165,7 +158,6 @@ namespace Wumpus_World {
                     break;
             }
             UpdateVisited(); // update visited cells
-            statistics.IncrementStat('A');
             score++;
             // checks if wall, does not let the agent move to wall cell
             if (ObstacleCheck(board[currentX, currentY].GetState(), prevX, prevY)) {
@@ -192,7 +184,6 @@ namespace Wumpus_World {
                     facing = Direction.North;
                     break;
             }
-            statistics.IncrementStat('A');
             score++;
         }
         
@@ -214,7 +205,6 @@ namespace Wumpus_World {
                     facing = Direction.South;
                     break;
             }
-            statistics.IncrementStat('A');
             score++;
         }
         
@@ -316,12 +306,10 @@ namespace Wumpus_World {
         public bool AliveCheck() {
             switch (board[currentX, currentY].GetState()) {
                 case State.Wumpus:
-                    statistics.IncrementStat('W');
-                    statistics.IncrementStat('D');
+                    stats.incWumpusFalls();
                     return false;
                 case State.Pit:
-                    statistics.IncrementStat('P');
-                    statistics.IncrementStat('D');
+                    stats.incPitFalls();
                     return false;
             }
             return !isDead;
@@ -329,7 +317,7 @@ namespace Wumpus_World {
 
         public bool GoldCheck() {
             if (board[currentX, currentY].GetState() == State.Gold) {
-                statistics.IncrementStat('G');
+                stats.incGoldFound();
                 return true;
             }
             return false;
@@ -340,7 +328,7 @@ namespace Wumpus_World {
         private void UpdateVisited() {
             if (!cellsVisited.ContainsKey(new Tuple<int, int>(currentX, currentY))) {
                 cellsVisited.Add(new Tuple<int, int>(currentX, currentY), true);
-                statistics.IncrementStat('E');
+                stats.incCellsExplored();
             }
         }
 
@@ -443,49 +431,5 @@ namespace Wumpus_World {
         // calculate the distance from player cell to desired cell
         private double CalcDistance(Cell goalCell, Cell compCell)  => 
             Math.Sqrt((Math.Pow(goalCell.getX - compCell.getX, 2) + Math.Pow(goalCell.getY - compCell.getY, 2)));
-
-        /// <summary>
-        /// Append stats to the stats list.
-        /// </summary>
-        /// <param name="stat"></param>
-        protected void AppendStatsList(Statistics stat) {
-            statsList.Add(stat);
-        }
-
-        /// <summary>
-        /// Print the average of the stats
-        /// </summary>
-        public void PrintAverage() {
-            Statistics averageStats = new Statistics();
-            // loop through stats list and calculate the average
-            foreach (Statistics s in statsList) {
-                s.PrintStats(board);
-            }
-            // foreach (Statistics s in statsList)
-            // {
-            //     averageStats.AddToStat('A', s.agentStats['A']);
-            //     averageStats.AddToStat('G', s.agentStats['G']);
-            //     averageStats.AddToStat('K', s.agentStats['K']);
-            //     averageStats.AddToStat('W', s.agentStats['W']);
-            //     averageStats.AddToStat('D', s.agentStats['D']);
-            //     averageStats.AddToStat('P', s.agentStats['P']);
-            //     averageStats.AddToStat('E', s.agentStats['E']);
-            // }
-            
-            // divide stats by 10
-            // foreach (var key in averageStats.agentStats.Keys.ToList()) {
-            //     averageStats.agentStats[key] = averageStats.agentStats[key] / 10.0; //10 boards per run
-            // }
-            // print out the stats
-            //averageStats.PrintStats(board);
-            ClearAverage(); // clear stats from agent
-        }
-
-        /// <summary>
-        /// Clears all stats from the stats
-        /// </summary>
-        private void ClearAverage() {
-            statsList.Clear();
-        } 
     }
 }
