@@ -1,13 +1,13 @@
 ﻿using System;
-
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Wumpus_World {
     public class Driver {
         // References of agents used throughout the program
-        private FOLAgent foa;
-        private ReflexAgent ra;
+        //private FOLAgent foa;
+        //private ReflexAgent ra;
         private StatsManager sm;
         private const int iterations = 10;
         
@@ -17,8 +17,8 @@ namespace Wumpus_World {
         /// <param name="foa"></param>
         /// <param name="ra"></param>
         public Driver(FOLAgent foa, ReflexAgent ra) {
-            this.foa = foa;
-            this.ra = ra;
+            //this.foa = foa;
+            //this.ra = ra;
             sm = new StatsManager(iterations);
         }
 
@@ -43,15 +43,18 @@ namespace Wumpus_World {
                 // Collecting statistics
                 for (int boardNum = 0; boardNum < iterations; boardNum++) {
                     Board board = new Board(size);
-                    //foa.SetBoard(board);
+                    ReflexAgent ra = new ReflexAgent();
+                    FOLAgent foa = new FOLAgent();
+                    foa.SetBoard(board);
                     ra.SetBoard(board);
-                    //foa.Navigate(board);
+                    foa.Navigate(board);
                     ra.Navigate(board);
-                    sm.raStats[boardSize].Add(ra.GetStats);
-                    //sm.foaStats[boardSize].Add(foa.GetStats);
+                    sm.raStats[boardSize].Add( ra.GetStats.Copy());
+                    sm.foaStats[boardSize].Add(foa.GetStats);
                 }
-                sm.Averages("ra", boardSize+1);
-                //sm.Average("foa");
+
+                sm.Averages("ra", boardSize + 1);
+                sm.Averages("foa", boardSize + 1);
             }
         }
     }

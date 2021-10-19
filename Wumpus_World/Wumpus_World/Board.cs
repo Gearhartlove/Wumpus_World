@@ -28,8 +28,8 @@ namespace Wumpus_World {
         // Board probabilities
         private const double pWumpus = 0.1;
         private const double pObstacle = 0.1;
-        private const double pPit = 0.2;
-        private const double pEmpty = 0.6;
+        private const double pPit = 0.1;
+        private const double pEmpty = 0.7;
         // Random generator
         private Random rand;
         // Agent must be manually assigned using SetAgent() Method

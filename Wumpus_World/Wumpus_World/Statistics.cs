@@ -44,5 +44,13 @@ namespace Wumpus_World {
             wumpusFalls = 0;
             cellsExplored = 0;
         }
+
+        public Statistics Copy() {
+            return new Statistics() {
+                cellsExplored = GetCellsExplored, goldFound = GetGoldFound,
+                pitFalls = GetPitFalls, wumpusFalls = GetWumpusFalls,
+                wumpusKilled = GetWumpusKilled,
+            };
+        }
     }
 }

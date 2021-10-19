@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Wumpus_World {
     public class StatsManager {
@@ -15,45 +16,43 @@ namespace Wumpus_World {
         public StatsManager(int i) {
             iterations = i;
         }
-        
+
         public void Averages(String agent, int boardSize) {
-            Statistics aveStats = new Statistics();
             if (agent == "foa") {
-                aveStats = CalculateAverage(raStats);
-            }
-            if (agent == "ra") {
-                aveStats = CalculateAverage(foaStats);
-            }
-            PrintAverage(agent, aveStats, boardSize * 5);
-        }
-        
-        // calculate average
-        private Statistics CalculateAverage(List<List<Statistics>> stats2D) {
-            Statistics aveStats = new Statistics();
-            // Sum the totals
-            for (int i = 0; i < stats2D.Count; i++) {
-                for (int j = 0; j < stats2D[i].Count; j++) {
-                    totalGoldFound += stats2D[i][j].GetGoldFound;
-                    totalPitFalls += stats2D[i][j].GetPitFalls;
-                    totalWumpusFalls += stats2D[i][j].GetWumpusFalls;
-                    totalWumpusKilled += stats2D[i][j].GetWumpusKilled;
-                    totalCellsExplored += stats2D[i][j].GetCellsExplored;
-                }
+                List<Statistics> s1 = foaStats[boardSize - 1]; 
+                CalculateAverage(s1, boardSize - 1);
             }
 
+            if (agent == "ra") {
+                List<Statistics> s1 = raStats[boardSize - 1]; 
+                CalculateAverage(s1, boardSize - 1);
+            }
+
+            PrintAverage(agent, boardSize * 5);
+        }
+
+        // calculate average
+        private void CalculateAverage(List<Statistics> stats2D, int bs) {
+            // Sum the totals
+            for (int j = 0; j < iterations; j++) {
+                totalGoldFound += stats2D[j].GetGoldFound;
+                totalPitFalls += stats2D[j].GetPitFalls;
+                totalWumpusFalls += stats2D[j].GetWumpusFalls;
+                totalWumpusKilled += stats2D[j].GetWumpusKilled;
+                totalCellsExplored += stats2D[j].GetCellsExplored;
+            }
+
+            // divide by number of board per board size
             totalGoldFound /= iterations;
             totalPitFalls /= iterations;
-            totalWumpusFalls/= iterations;
-            totalWumpusKilled/= iterations;
-            totalCellsExplored/= iterations;
+            totalWumpusFalls /= iterations;
+            totalWumpusKilled /= iterations;
+            totalCellsExplored /= iterations;
             //totalScore /= iterations;
-            
-            // Divide by 10
-            return aveStats;
         }
-        
-        // print stats
-        public void PrintAverage(String agent, Statistics ave, int bs) {
+
+    // print stats
+        public void PrintAverage(String agent, int bs) {
             String o = "";
             if (agent == "foa") o += "First Order Logic Agent " + bs + "x" + bs + " Averages:\n";
             if (agent == "ra") o += "Reflexive Agent " + bs + "x" + bs + " Averages:\n";
